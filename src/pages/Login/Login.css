@@ -23,7 +23,14 @@ input::placeholder {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
+}
+
+.theme { 
+    position: absolute;
+    top: 100px;
+    z-index: 100;
+    left: 380px;
 }
 
 .login-body {
