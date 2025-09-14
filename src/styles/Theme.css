@@ -1,0 +1,21 @@
+/* Default light theme */
+:root[data-theme='light'] {
+  --bg-color: #ffffff;
+  --text-color: #111111;
+}
+
+/* Dark theme */
+:root[data-theme='dark'] {
+  --bg-color: #111111;
+  --text-color: #ffffff;
+}
+
+:root {
+  --linear-gradient: linear-gradient(90deg, #663cf7, #9427fc, #7a2cfa, #5d4cf9);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+}

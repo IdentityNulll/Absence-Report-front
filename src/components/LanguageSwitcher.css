@@ -1,0 +1,44 @@
+.language-switcher {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Button base */
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 2px solid var(--text-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.lang-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+
+/* Active (current language) */
+.lang-btn.active {
+  background: var(--text-color);
+  color: var(--bg-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Flag animation */
+.flag {
+  font-size: 1.2rem;
+  transition: transform 0.4s ease;
+}
+
+.lang-btn:hover .flag {
+  transform: rotate(10deg) scale(1.2);
+}

@@ -1,0 +1,8 @@
+{
+  "login": {
+    "title": "Welcome Back.",
+    "email": "Email Address",
+    "password": "Password",
+    "button": "Login"
+  }
+}
