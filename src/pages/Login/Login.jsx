@@ -14,7 +14,6 @@ import ThemeSwitcher from "../../components/ThemeSwitcher";
 import "aos/dist/aos.css";
 import AOS from "aos";
 
-
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -101,16 +100,18 @@ function Login() {
 
   return (
     <div>
-      <div className="theme" data-aos="fade-right">
+      <div className="theme" >
         <ThemeSwitcher />
       </div>
       <div className="login-page">
         <spline-viewer
           loading-anim-type="spinner-small-dark"
           url="https://prod.spline.design/bfRXgsB4kicyhWHU/scene.splinecode"
-          style={{ width: "50%", height: "600px" }}
+          style={{ width: "50%", height: "700px" }}
           data-aos="fade-right"
-        ></spline-viewer>
+        >
+        </spline-viewer>
+          <div className="smth"></div>
 
         {/* Login Form */}
         <div className="container" data-aos="fade-left">

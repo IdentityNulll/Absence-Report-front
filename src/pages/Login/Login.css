@@ -21,16 +21,16 @@ input::placeholder {
 
 .login-page {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   height: 80vh;
 }
 
 .theme { 
     position: absolute;
-    top: 100px;
+    top: 10%;
     z-index: 100;
-    left: 380px;
+    left: 18%;
 }
 
 .login-body {
@@ -45,7 +45,7 @@ input::placeholder {
   background: var(--linear-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-size: 36px;
+  font-size: 45px;
   font-weight: 400;
   font-family: "SchoolBell";
 }
@@ -61,6 +61,7 @@ input::placeholder {
   flex-direction: column;
   gap: 20px;
   align-items: flex-start;
+  width: 400px;
 }
 .inputs-container {
   display: flex;
@@ -70,16 +71,17 @@ input::placeholder {
 }
 .input-container {
   border: 1px solid var(--text-color);
-  width: 100%;
-  height: 40px;
+  width: 250px;
+  height: 50px;
   display: flex;
   align-items: center;
   border-radius: 5px;
   padding: 10px;
+  justify-content: space-between;
 }
 .login-btn {
   padding: 10px;
-  width: 150px;
+  width: 200px;
   height: 40px;
   gap: 5px;
   color: var(--text-color);
@@ -89,7 +91,7 @@ input::placeholder {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
 }
 .login-btn:hover {
   box-shadow: 0 0 12px rgba(255, 107, 107, 0.6),
@@ -97,4 +99,14 @@ input::placeholder {
   transform: translateY(-2px) scale(1.03);
   transition: all 0.25s ease-in-out;
 }
-
+.smth {
+  background-color: red;
+  width: 155px;
+  height: 45px;
+  z-index: 1000;
+  position: absolute;
+  bottom: 25%;
+  left: 51%;
+  background-color: var(--bg-color);
+  transition: none;
+}
