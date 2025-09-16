@@ -1,8 +1,11 @@
 {
   "login": {
-    "title": "ログインページ",
-    "email": "メールアドレス",
-    "password": "パスワード",
-    "button": "ログイン"
+    "title": "学校出席管理システム",
+    "title-small": "アカウントにサインイン",
+    "email-label": "メールアドレス",
+    "email": "メールアドレスを入力してください",
+    "password-label": "パスワード",
+    "password": "パスワードを入力してください",
+    "button": "サインイン"
   }
 }

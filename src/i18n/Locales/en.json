@@ -1,8 +1,11 @@
 {
   "login": {
-    "title": "Welcome Back.",
-    "email": "Email Address",
-    "password": "Password",
-    "button": "Login"
+    "title": "School Attendance Management System",
+    "title-small" :"Sign in to your account",
+    "email-label" : "Your Email",
+    "email": "Enter Your email",
+    "password-label": "Your Password",
+    "password": "Enter Your password",
+    "button": "Sign In"
   }
 }

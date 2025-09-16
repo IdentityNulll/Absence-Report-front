@@ -9,3 +9,8 @@
     src: url("./assets/Fonts/Schoolbell-Regular.ttf");
     font-weight: 400;
 }
+@font-face {
+    font-family: "Roboto";
+    src: url("./assets/Fonts/Roboto_SemiCondensed-Regular.ttf");
+    font-weight: 400;
+}

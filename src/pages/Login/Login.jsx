@@ -1,24 +1,23 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import "./Login.css";
-import Toastify from "toastify-js";
-import "toastify-js/src/toastify.css";
-import { useEffect } from "react";
-import { faEye, faUser, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRocket } from "@fortawesome/free-solid-svg-icons";
-import { useTheme } from "../../context/Theme.context";
+import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "../../components/LanguageSwitcher";
-import ThemeSwitcher from "../../components/ThemeSwitcher";
-import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/Theme.context";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AOS from "aos";
+import "aos/dist/aos.css";
+import ThemeSwichter from "../../components/ThemeSwitcher";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
 
 function Login() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -34,7 +33,14 @@ function Login() {
     { email: "student@test.com", password: "student123", role: "student" },
   ];
 
-  const { theme, toggleTheme } = useTheme();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token && role) {
+      navigate(`/${role}/dashboard`);
+    }
+  }, [navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -57,100 +63,68 @@ function Login() {
         navigate("/student/dashboard");
       }
 
-      Toastify({
-        text: `Welcome, ${
-          user.role.charAt(0).toUpperCase() + user.role.slice(1)
-        }! 🎉`,
-        duration: 3000,
-        gravity: "top",
-        position: "center",
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-          fontWeight: "bold",
-          fontSize: "16px",
-        },
-      }).showToast();
+      toast.success("Successfully Passed Please Wait");
     } else {
-      Toastify({
-        text: "Invalid email or password",
-        duration: 3000,
-        gravity: "top",
-        position: "center",
-        style: {
-          background: "linear-gradient(to right, #ff5f6d, #ffc371)",
-          fontWeight: "bold",
-        },
-        callback: () => {
-          if (navigator.vibrate) {
-            navigator.vibrate([100, 50, 100, 50, 300]);
-          }
-        },
-      }).showToast();
+      toast.error("Your email or password is wrong try again please");
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-
-    if (token && role) {
-      navigate(`/${role}/dashboard`);
-    }
-  }, [navigate]);
-
+  const { theme, toggleTheme } = useTheme();
   return (
-    <div>
-      <div className="theme" >
-        <ThemeSwitcher />
+    <>
+      <div className="switchers">
+        <ThemeSwichter />
+        <LanguageSwitcher />
       </div>
-      <div className="login-page">
-        <spline-viewer
-          loading-anim-type="spinner-small-dark"
-          url="https://prod.spline.design/bfRXgsB4kicyhWHU/scene.splinecode"
-          style={{ width: "50%", height: "700px" }}
-          data-aos="fade-right"
-        >
-        </spline-viewer>
-          <div className="smth"></div>
-
-        {/* Login Form */}
-        <div className="container" data-aos="fade-left">
-          <form onSubmit={handleLogin} className="login-form">
-            <h4 className="title">{t("login.title")}</h4>
-            <div className="inputs-container">
-              <div className="input-container">
-                <input
-                  type="email"
-                  placeholder={t("login.email")}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <FontAwesomeIcon icon={faUser} />
-              </div>
-              <div className="input-container">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder={t("login.password")}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <FontAwesomeIcon
-                  icon={showPassword ? faEyeSlash : faEye}
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{ cursor: "pointer" }}
-                />
-              </div>
-            </div>
-
-            <button type="submit" className="login-btn">
-              {t("login.button")}
-              <FontAwesomeIcon icon={faRocket} />
-            </button>
-          </form>
-          <LanguageSwitcher />
+      <div className="container">
+        <div className="title">
+          <FontAwesomeIcon
+            icon={faGraduationCap}
+            style={{
+              background: "oklch(0.488 0.243 264.376)",
+              padding: "15px",
+              borderRadius: "8px",
+              color: "white",
+            }}
+          />
+          <h3>{t("login.title")}</h3>
+          <p>{t("login.title-small")}</p>
         </div>
+        <form onSubmit={handleLogin} className="form-container">
+          <div className="input-container">
+            <label htmlFor="email">{t("login.email-label")}</label>
+            <input
+              type="email"
+              id="email"
+              placeholder={t("login.email")}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="input-container">
+            <label htmlFor="password">{t("login.password-label")}</label>
+            <div className="icon">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder={t("login.password")}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          </div>
+          <p className="forgot">Forgot Password?</p>
+          <button type="submit" className="login-btn">
+            Sign In
+          </button>
+        </form>
       </div>
-    </div>
+      <ToastContainer />
+    </>
   );
 }
 
