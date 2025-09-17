@@ -6,6 +6,7 @@
     "email": "Enter Your email",
     "password-label": "Your Password",
     "password": "Enter Your password",
-    "button": "Sign In"
+    "button": "Sign In",
+    "or": "or"
   }
 }

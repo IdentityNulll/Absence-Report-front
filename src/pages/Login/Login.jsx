@@ -12,6 +12,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import ThemeSwichter from "../../components/ThemeSwitcher";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { GoogleLogin } from "@react-oauth/google";
+import * as jwt_decode from "jwt-decode";
 
 function Login() {
   const { t } = useTranslation();
@@ -22,8 +24,8 @@ function Login() {
 
   useEffect(() => {
     AOS.init({
-      duration: 1000, // animation duration (ms)
-      once: true, // whether animation should happen only once
+      duration: 1000,
+      once: true,
     });
   }, []);
 
@@ -42,6 +44,29 @@ function Login() {
     }
   }, [navigate]);
 
+  // ✅ Google login handlers OUTSIDE of handleLogin
+  const handleGoogleSuccess = (credentialResponse) => {
+    const handleGoogleSuccess = (credentialResponse) => {
+      const decoded = jwt_decode.default(credentialResponse.credential);
+      const googleEmail = decoded.email;
+    };
+
+    const user = fakeUsers.find((u) => u.email === googleEmail);
+    if (user) {
+      localStorage.setItem("token", "fake-jwt-token");
+      localStorage.setItem("role", user.role);
+
+      navigate(`/${user.role}/dashboard`);
+      toast.success("Logged in with Google!");
+    } else {
+      toast.error("No account found with this Google email");
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error("Google login failed, try again!");
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -50,11 +75,9 @@ function Login() {
     );
 
     if (user) {
-      // save token (mocked)
       localStorage.setItem("token", "fake-jwt-token");
       localStorage.setItem("role", user.role);
 
-      // redirect based on role
       if (user.role === "admin") {
         navigate("/admin/dashboard");
       } else if (user.role === "teacher") {
@@ -121,7 +144,15 @@ function Login() {
           <button type="submit" className="login-btn">
             Sign In
           </button>
+          <div class="line-with-text">
+            <span>OR</span>
+          </div>  
         </form>
+
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+        />
       </div>
       <ToastContainer />
     </>

@@ -86,3 +86,24 @@ button {
   color: white;
   font-size: 18px;
 }
+.line-with-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.line-with-text::before,
+.line-with-text::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.line-with-text:not(:empty)::before {
+  margin-right: .75em;
+}
+
+.line-with-text:not(:empty)::after {
+  margin-left: .75em;
+}
