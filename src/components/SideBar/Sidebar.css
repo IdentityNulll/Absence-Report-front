@@ -1,0 +1,145 @@
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+  color: var(--text-color);
+}
+
+/* Close button inside sidebar */
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 7px;
+  border-radius: 10px;
+}
+.close-btn:hover {
+    background-color: #ccc;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--text-color);
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.logo-text {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.logo-img {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main-color);
+    border-radius: 50%;
+    color: white;
+}
+.logo-text1 {
+    color: var(--text-color);
+}
+.logo-text1 h4{
+    font-size: 16px;
+}
+.logo-text1 p {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+
+.menu {
+    margin-top: 20px;
+}
+/* Links */
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-color);
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.user {
+  color: blue;
+}
+.calendar {
+    color: brown;
+}
+.bell {
+    color: red;
+}
+.analytics{
+    color: purple;
+}
+.menu a:hover {
+  background: var(--hover-color);
+}
+
+.logout {
+  margin-top: auto;
+}
+.logout a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ff6b6b;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Hamburger Button (always outside sidebar) */
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  color: var(--text-color);
+  font-size: 16px;
+  border: 1px solid #ccc;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 1101;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
