@@ -1,28 +1,28 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  //   faUser,
-  //   faCalendar,
-  //   faBell,
   faChartLine,
   faSignOutAlt,
   faBars,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faCalendar, faBell } from "@fortawesome/free-regular-svg-icons";
 import "./Sidebar.css";
-import {
-  faUser,
-  faCalendar,
-  faBell,
-} from "@fortawesome/free-regular-svg-icons";
 import ThemeSwitcher from "../ThemeSwitcher";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // <-- useNavigate here
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate(); // <-- hook for navigation
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // <-- remove token
+    closeSidebar(); // close sidebar
+    navigate("/"); // <-- redirect to login
+  };
 
   return (
     <>
@@ -70,9 +70,9 @@ function Sidebar() {
 
         <ThemeSwitcher />
         <div className="logout">
-          <a href="/login" onClick={closeSidebar}>
+          <button onClick={handleLogout} className="logout-btn">
             <FontAwesomeIcon icon={faSignOutAlt} /> <span>Logout</span>
-          </a>
+          </button>
         </div>
       </aside>
 
