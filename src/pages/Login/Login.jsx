@@ -44,22 +44,24 @@ function Login() {
     }
   }, [navigate]);
 
-  // ✅ Google login handlers OUTSIDE of handleLogin
   const handleGoogleSuccess = (credentialResponse) => {
-    const handleGoogleSuccess = (credentialResponse) => {
+    try {
       const decoded = jwt_decode.default(credentialResponse.credential);
       const googleEmail = decoded.email;
-    };
 
-    const user = fakeUsers.find((u) => u.email === googleEmail);
-    if (user) {
-      localStorage.setItem("token", "fake-jwt-token");
-      localStorage.setItem("role", user.role);
+      const user = fakeUsers.find((u) => u.email === googleEmail);
+      if (user) {
+        localStorage.setItem("token", "fake-jwt-token");
+        localStorage.setItem("role", user.role);
 
-      navigate(`/${user.role}/dashboard`);
-      toast.success("Logged in with Google!");
-    } else {
-      toast.error("No account found with this Google email");
+        navigate(`/${user.role}/dashboard`);
+        toast.success("Logged in with Google!");
+      } else {
+        toast.error("No account found with this Google email");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Google login failed to decode!");
     }
   };
 
@@ -79,14 +81,21 @@ function Login() {
       localStorage.setItem("role", user.role);
 
       if (user.role === "admin") {
-        navigate("/admin/dashboard");
+        toast.success("Successfully Passed Please Wait");
+        setTimeout(() => {
+          navigate(`/${user.role}/dashboard`);
+        }, 1200);
       } else if (user.role === "teacher") {
-        navigate("/teacher/dashboard");
+        toast.success("Successfully Passed Please Wait");
+        setTimeout(() => {
+          navigate(`/${user.role}/dashboard`);
+        }, 1200);
       } else {
-        navigate("/student/dashboard");
+        toast.success("Successfully Passed Please Wait");
+        setTimeout(() => {
+          navigate(`/${user.role}/dashboard`);
+        }, 1200);
       }
-
-      toast.success("Successfully Passed Please Wait");
     } else {
       toast.error("Your email or password is wrong try again please");
     }
@@ -95,10 +104,6 @@ function Login() {
   const { theme, toggleTheme } = useTheme();
   return (
     <>
-      <div className="switchers">
-        <ThemeSwichter />
-        <LanguageSwitcher />
-      </div>
       <div className="container">
         <div className="title">
           <FontAwesomeIcon
@@ -146,7 +151,7 @@ function Login() {
           </button>
           <div class="line-with-text">
             <span>OR</span>
-          </div>  
+          </div>
         </form>
 
         <GoogleLogin

@@ -17,6 +17,9 @@ button {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--bg-main-color);
 }
 .switchers {
   display: flex;
@@ -27,9 +30,13 @@ button {
 }
 .title h3 {
   font-size: 2rem;
+  font-family: "Sansation";
+  color: white;
+  margin: 10px 0;
 }
 .title p {
   font-size: 1.2rem;
+  color: white;
   margin-bottom: 20px;
   opacity: 0.8;
 }
@@ -42,37 +49,41 @@ button {
 .input-container label {
   font-size: 20px;
   cursor: pointer;
+  color: white;
 }
 .input-container > input {
   width: 250px;
-  border: 1px solid var(--text-color);
+  border: 1px solid white;
   padding: 8px;
+  height: 40px;
   border-radius: 8px;
-  color: var(--text-color);
+  color: white;
   margin-bottom: 10px;
 }
 .icon {
   width: 250px;
-  border: 1px solid var(--text-color);
+  border: 1px solid white;
   padding: 8px;
   display: flex;
+  height: 40px;
   align-items: center;
   justify-content: space-between;
   border-radius: 8px;
-  color: var(--text-color);
+  color: white;
   margin-bottom: 15px;
 }
 .icon input {
-  color: var(--text-color);
+  color: white;
 }
 .icon input::placeholder {
-  color: var(--text-color);
+  color: white;
 }
 .input-container input::placeholder {
-  color: var(--text-color);
+  color: white;
 }
 .forgot {
   text-align: end;
+  color: white;
 }
 .login-btn {
   width: 250px;
@@ -91,6 +102,7 @@ button {
   align-items: center;
   text-align: center;
   margin: 20px 0;
+  color: white;
 }
 
 .line-with-text::before,
@@ -101,9 +113,9 @@ button {
 }
 
 .line-with-text:not(:empty)::before {
-  margin-right: .75em;
+  margin-right: 0.75em;
 }
 
 .line-with-text:not(:empty)::after {
-  margin-left: .75em;
+  margin-left: 0.75em;
 }

@@ -13,6 +13,7 @@
 :root {
   --linear-gradient: linear-gradient(90deg, #663cf7, #9427fc, #7a2cfa, #5d4cf9);
   --main-color: oklch(0.488 0.243 264.376);
+  --bg-main-color: linear-gradient(90deg, #b36ef6, #45a4ff);
 }
 
 body {

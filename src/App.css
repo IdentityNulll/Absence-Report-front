@@ -14,3 +14,7 @@
     src: url("./assets/Fonts/Roboto_SemiCondensed-Regular.ttf");
     font-weight: 400;
 }
+@font-face {
+    font-family: "Sansation";
+    src: url("./assets/Fonts/Sansation-Regular.ttf");
+}
