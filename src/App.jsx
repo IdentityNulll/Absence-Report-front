@@ -2,10 +2,11 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login.jsx";
 import Dashboard from "./Panels/AdminPanel/Dashboard/Dashboard.jsx";
-import Class from "./Panels/AdminPanel/Classes/Class.jsx";
 import Profile from "./Panels/AdminPanel/Profile/Profile.jsx";
 import Schedule from "./Panels/AdminPanel/Schedule/Schedule.jsx";
-import ProtectedRoute from "./components/SideBar/ProtectedRoute.jsx";
+import Analytics from "./Panels/AdminPanel/Analytics/Analytics.jsx";
+import Notifications from "./Panels/AdminPanel/Notifications/Notifications.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import "./App.css";
 import { ThemeProvider } from "./context/Theme.context.jsx";
 import "./styles/Theme.css";
@@ -26,10 +27,10 @@ function App() {
             }
           />
           <Route
-            path="/admin/class"
+            path="/admin/notifications"
             element={
               <ProtectedRoute>
-                <Class />
+                <Notifications/>
               </ProtectedRoute>
             }
           />
@@ -49,6 +50,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+          path="/admin/analytics"
+          element={
+            <ProtectedRoute>
+              <Analytics/>
+            </ProtectedRoute>
+          }/>
         </Routes>
       </ThemeProvider>
     </GoogleOAuthProvider>
