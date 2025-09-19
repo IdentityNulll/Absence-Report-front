@@ -9,19 +9,19 @@ import {
 import { faUser, faCalendar, faBell } from "@fortawesome/free-regular-svg-icons";
 import "./Sidebar.css";
 import ThemeSwitcher from "../ThemeSwitcher";
-import { Link, useNavigate } from "react-router-dom"; // <-- useNavigate here
+import { Link, useNavigate } from "react-router-dom"; 
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate(); // <-- hook for navigation
+  const navigate = useNavigate(); 
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // <-- remove token
-    closeSidebar(); // close sidebar
-    navigate("/"); // <-- redirect to login
+    localStorage.removeItem("token"); 
+    closeSidebar(); 
+    navigate("/"); 
   };
 
   return (
