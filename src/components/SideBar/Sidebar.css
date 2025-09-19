@@ -143,3 +143,17 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
+.logout-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-btn:hover {
+  text-decoration: underline;
+}
