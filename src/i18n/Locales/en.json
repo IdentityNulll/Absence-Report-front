@@ -8,5 +8,10 @@
     "password": "Enter Your password",
     "button": "Sign In",
     "or": "or"
+  },
+  "dashboard" : {
+    "title": "Welcome back,",
+    "title-description": "Manage your classes and track student progress",
+    "current": "Current time"
   }
 }

@@ -20,6 +20,38 @@
   transform: translateX(0);
   color: var(--text-color);
 }
+/* Sidebar Toggle (Hamburger) */
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 50%; /* move relative to center */
+  transform: translateX(-680px); /* (1400px / 2) - padding offset */
+  color: var(--text-color);
+  font-size: 20px;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 1101;
+  background: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.sidebar-toggle:hover {
+  background: var(--hover-color);
+}
+
+/* Adjust dynamically on tablet */
+@media (max-width: 1400px) {
+  .sidebar-toggle {
+    left: 20px;
+    transform: none;
+  }
+}
 
 /* Close button inside sidebar */
 .close-btn {
@@ -32,7 +64,7 @@
   border-radius: 10px;
 }
 .close-btn:hover {
-    background-color: #ccc;
+  background-color: #ccc;
 }
 
 /* Logo */
@@ -48,34 +80,33 @@
 }
 
 .logo-text {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 .logo-img {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--main-color);
-    border-radius: 50%;
-    color: white;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-color);
+  border-radius: 50%;
+  color: white;
 }
 .logo-text1 {
-    color: var(--text-color);
+  color: var(--text-color);
 }
-.logo-text1 h4{
-    font-size: 16px;
+.logo-text1 h4 {
+  font-size: 16px;
 }
 .logo-text1 p {
-    font-size: 12px;
-    opacity: 0.6;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
-
 .menu {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 /* Links */
 .menu a {
@@ -95,13 +126,13 @@
   color: blue;
 }
 .calendar {
-    color: brown;
+  color: brown;
 }
 .bell {
-    color: red;
+  color: red;
 }
-.analytics{
-    color: purple;
+.analytics {
+  color: purple;
 }
 .menu a:hover {
   background: var(--hover-color);
@@ -120,7 +151,7 @@
 }
 
 /* Hamburger Button (always outside sidebar) */
-.sidebar-toggle {
+/* .sidebar-toggle {
   position: fixed;
   top: 15px;
   left: 15px;
@@ -131,7 +162,7 @@
   border-radius: 6px;
   cursor: pointer;
   z-index: 1101;
-}
+} */
 
 /* Overlay */
 .overlay {
