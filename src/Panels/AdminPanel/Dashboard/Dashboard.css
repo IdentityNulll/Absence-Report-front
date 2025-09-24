@@ -1,5 +1,6 @@
 /* Reset */
-li, a {
+li,
+a {
   text-decoration: none;
   list-style: none;
   color: inherit;
@@ -7,6 +8,7 @@ li, a {
 * {
   padding: 0;
   margin: 0;
+  font-family: sans-serif;
   /* color: var(--text-color) !important; */
 }
 
@@ -75,9 +77,9 @@ li, a {
   justify-content: space-between;
   max-width: 1400px;
   width: 100%;
+  height: 110px;
   transition: margin-left 0.3s ease;
 }
-
 /* shift welcome card when sidebar open (desktop only) */
 .sidebar.open ~ .welcome-card {
   margin-left: 270px;
@@ -103,7 +105,7 @@ li, a {
 
 .welcome-left h3 {
   margin-bottom: 5px;
-  font-size: 20px;
+  font-size: 23px;
 }
 .welcome-left p {
   font-size: 14px;
@@ -168,5 +170,217 @@ li, a {
   }
   .welcome-right .time {
     font-size: 16px;
+  }
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.stats-box {
+  width: 350px;
+  height: 150px;
+  /* border: 1px solid ; */
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background-color: white;
+  box-shadow: 1px 1px 0 1px #e0e0e0;
+}
+.stats-box svg {
+  font-size: 30px;
+}
+.number {
+  font-size: 24px !important;
+  font-weight: bold;
+}
+.text {
+  font-size: 14px;
+  color: #7c7c7c !important;
+  font-weight: 400;
+  font-family: "Roboto";
+}
+.item1 > p {
+  color: blue;
+}
+.item1 > svg {
+  color: rgb(64, 64, 218);
+}
+.item2 > p {
+  color: rgb(4, 146, 4);
+}
+.item2 > svg {
+  color: rgb(19, 219, 19);
+}
+.item3 > p {
+  color: orange;
+}
+.item3 > svg {
+  color: rgb(250, 174, 34);
+}
+.item4 > p {
+  color: rgb(199, 4, 199);
+}
+.item4 > svg {
+  color: rgb(238, 2, 238);
+}
+/* ===== CLASSES + QUICK STATS ===== */
+.classes-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin: 30px auto;
+  max-width: 1400px;
+  transition: margin-left 0.3s ease;
+}
+
+/* shift when sidebar open */
+.sidebar.open ~ .classes-container {
+  margin-left: 270px;
+  margin-right: 20px;
+}
+
+/* My Classes */
+.my-classes {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-classes h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.my-classes > h3 > svg {
+  color: rgb(189, 9, 189);
+}
+
+.class-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: #f9f9f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.class-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.class-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.class-card h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.class-card p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.students {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2563eb;
+}
+
+/* Colors */
+.class-card.purple .class-icon {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+.class-card.blue .class-icon {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+.class-card.green .class-icon {
+  background: #dcfce7;
+  color: #15803d;
+}
+.class-card.orange .class-icon {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+/* Quick Stats */
+.quick-stats {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quick-stats h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.quick-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #f9f9f9;
+}
+
+.quick-card span {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.quick-card strong {
+  font-weight: 600;
+}
+
+/* Colors */
+.quick-card.present span {
+  color: #22c55e;
+}
+.quick-card.absent span {
+  color: #ef4444;
+}
+.quick-card.late span {
+  color: #f59e0b;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+  .classes-container {
+    grid-template-columns: 1fr;
   }
 }
