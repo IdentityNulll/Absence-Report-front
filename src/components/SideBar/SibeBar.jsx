@@ -6,22 +6,27 @@ import {
   faBars,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { faUser, faCalendar, faBell } from "@fortawesome/free-regular-svg-icons";
+import {
+  faUser,
+  faCalendar,
+  faBell,
+  faHouse
+} from "@fortawesome/free-regular-svg-icons";
 import "./Sidebar.css";
 import ThemeSwitcher from "../ThemeSwitcher";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    closeSidebar(); 
-    navigate("/"); 
+    localStorage.removeItem("token");
+    closeSidebar();
+    navigate("/");
   };
 
   return (
@@ -49,6 +54,10 @@ function Sidebar() {
         <hr style={{ opacity: "0.6" }} />
 
         <nav className="menu">
+          <Link to={"/admin/dashboard"} onClick={closeSidebar}>
+            <FontAwesomeIcon icon={faHouse} className="house" />{" "}
+            <span>Dashboard</span>
+          </Link>
           <Link to={"/admin/profile"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faUser} className="user" />{" "}
             <span>My Profile</span>
