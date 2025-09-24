@@ -1,53 +1,117 @@
-.profile-container {
-  padding: 20px;
-  /* background: #f9f9f9; */
+.profile-page {
+  background: var(--bg-color);
+  color: var(--text-color);
   min-height: 100vh;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  transition: margin-left 0.3s ease;
+}
+
+.notification {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.profile-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--linear-gradient);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.profile-card {
+  text-align: center;
+  background: var(--bg-main-color);
+  padding: 30px;
+  border-radius: 20px;
+  margin: 20px 0;
+  color: #fff;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.profile-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.btn-gradient {
+  background: var(--linear-gradient);
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--main-color);
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
   color: var(--text-color);
 }
 
-h2 {
-  margin-bottom: 20px;
-  font-size: 22px;
+.btn-close {
+  margin-top: 15px;
+  background: #999;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
 }
 
-.card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+.role-section {
+  text-align: center;
 }
 
-.card h3 {
-  margin-bottom: 15px;
-  font-size: 18px;
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.form {
+.modal-content {
+  background: var(--bg-color);
+  padding: 25px;
+  border-radius: 15px;
+  width: 400px;
+  max-width: 90%;
+}
+
+.create-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.form input,
-.form select {
+.create-form input {
   padding: 10px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.btn {
-  padding: 10px;
-  background: var(--main-color);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
-}
-
-.btn:hover {
-  background: #0056b3;
 }

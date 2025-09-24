@@ -185,6 +185,7 @@
   gap: 8px;
 }
 
-.logout-btn:hover {
-  text-decoration: underline;
+
+.house {
+  color: orange;
 }

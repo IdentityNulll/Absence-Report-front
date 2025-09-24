@@ -38,9 +38,9 @@ function Dashboard() {
             <Sidebar />
           </div>
           <div className="header-profile">
-            <p className="notification">
+            <Link to={"/admin/notifications"} className="notification">
               <FontAwesomeIcon icon={faBell} /> <sup>8</sup>
-            </p>
+            </Link>
             <Link to={"/admin/profile"} className="logo-img">
               S
             </Link>
