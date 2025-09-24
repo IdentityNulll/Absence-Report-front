@@ -1,6 +1,6 @@
 /* Default light theme */
 :root[data-theme='light'] {
-  --bg-color: #ffffff;
+  --bg-color: #F4F9FD;
   --text-color: #111111;
 }
 

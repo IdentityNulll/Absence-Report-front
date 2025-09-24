@@ -12,6 +12,10 @@
   "dashboard" : {
     "title": "Welcome back,",
     "title-description": "Manage your classes and track student progress",
-    "current": "Current time"
+    "current": "Current time",
+    "stats-classes" : "Total Classes",
+    "stats-students" : "Total Students",
+    "stats-hours" : "Hours Today",
+    "stats-rate" : "Attendance Rate"
   }
 }
