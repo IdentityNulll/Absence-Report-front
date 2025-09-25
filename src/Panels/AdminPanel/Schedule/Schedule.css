@@ -1,0 +1,103 @@
+/* ===== FILTERS ===== */
+.filters-container {
+  display: flex;
+  gap: 20px;
+  margin: 20px auto;
+  max-width: 1400px;
+}
+
+.filter-box {
+  background: var(--card-bg);
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-box label {
+  font-weight: 600;
+  color: var(--main-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-box input,
+.filter-box select {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s;
+}
+
+.filter-box input:focus,
+.filter-box select:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+/* ===== SCHEDULE TABLE ===== */
+.schedule-container {
+  margin: 20px auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+  max-width: 1400px;
+}
+
+.schedule-container h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.schedule-table th {
+  background: linear-gradient(90deg, var(--main-color), var(--secondary-color));
+  color: white;
+  font-weight: 600;
+}
+
+.schedule-table tr:nth-child(even) {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.schedule-table tr:hover {
+  background: rgba(147, 51, 234, 0.08);
+  transition: background 0.2s;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  font-style: italic;
+  color: gray;
+}
+
+/* ===== DARK THEME FIXES ===== */
+.dark-theme .schedule-table tr:nth-child(even) {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.dark-theme .schedule-table tr:hover {
+  background: rgba(147, 51, 234, 0.2);
+}
