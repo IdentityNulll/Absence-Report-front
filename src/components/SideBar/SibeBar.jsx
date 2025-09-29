@@ -41,7 +41,7 @@ function Sidebar() {
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="logo">
           <div className="logo-text">
-            <div className="logo-img">S</div>
+            <div className="logo-img1">S</div>
             <div className="logo-text1">
               <h4>Sarah Mitchell</h4>
               <p>Role</p>

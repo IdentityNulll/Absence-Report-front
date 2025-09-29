@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import ThemeSwichter from "../../components/ThemeSwitcher";
+import ThemeSwitcher from "../../components/ThemeSwitcher";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { GoogleLogin } from "@react-oauth/google";
 import * as jwt_decode from "jwt-decode";
@@ -23,10 +23,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-    });
+    AOS.init({ duration: 1000, once: true });
   }, []);
 
   const fakeUsers = [
@@ -38,22 +35,18 @@ function Login() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-
-    if (token && role) {
-      navigate(`/${role}/dashboard`);
-    }
+    if (token && role) navigate(`/${role}/dashboard`);
   }, [navigate]);
 
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwt_decode.default(credentialResponse.credential);
       const googleEmail = decoded.email;
-
       const user = fakeUsers.find((u) => u.email === googleEmail);
+
       if (user) {
         localStorage.setItem("token", "fake-jwt-token");
         localStorage.setItem("role", user.role);
-
         navigate(`/${user.role}/dashboard`);
         toast.success("Logged in with Google!");
       } else {
@@ -65,13 +58,11 @@ function Login() {
     }
   };
 
-  const handleGoogleError = () => {
+  const handleGoogleError = () =>
     toast.error("Google login failed, try again!");
-  };
 
   const handleLogin = (e) => {
     e.preventDefault();
-
     const user = fakeUsers.find(
       (u) => u.email === email && u.password === password
     );
@@ -79,46 +70,32 @@ function Login() {
     if (user) {
       localStorage.setItem("token", "fake-jwt-token");
       localStorage.setItem("role", user.role);
-
-      if (user.role === "admin") {
-        toast.success("Successfully Passed Please Wait");
-        setTimeout(() => {
-          navigate(`/${user.role}/dashboard`);
-        }, 1200);
-      } else if (user.role === "teacher") {
-        toast.success("Successfully Passed Please Wait");
-        setTimeout(() => {
-          navigate(`/${user.role}/dashboard`);
-        }, 1200);
-      } else {
-        toast.success("Successfully Passed Please Wait");
-        setTimeout(() => {
-          navigate(`/${user.role}/dashboard`);
-        }, 1200);
-      }
+      toast.success("Successfully Passed Please Wait");
+      setTimeout(() => navigate(`/${user.role}/dashboard`), 1200);
     } else {
       toast.error("Your email or password is wrong try again please");
     }
   };
 
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
+
   return (
     <>
-      <div className="container">
-        <div className="title">
-          <FontAwesomeIcon
-            icon={faGraduationCap}
-            style={{
-              background: "oklch(0.488 0.243 264.376)",
-              padding: "15px",
-              borderRadius: "8px",
-              color: "white",
-            }}
-          />
-          <h3>{t("login.title")}</h3>
-          <p>{t("login.title-small")}</p>
+      <div className="login-page">
+        {/* top utilities */}
+        <div className="utilities">
+          <LanguageSwitcher />
+          <ThemeSwitcher />
         </div>
-        <form onSubmit={handleLogin} className="form-container">
+
+        {/* main card */}
+        <form onSubmit={handleLogin} className="login-card" data-aos="fade-up">
+          <div className="title" data-aos="fade-down">
+            <FontAwesomeIcon icon={faGraduationCap} className="logo-icon" data-aos="fade-up"/>
+            <h3 data-aos="fade-up">{t("login.title")}</h3>
+            <p data-aos="fade-up">{t("login.title-small")}</p>
+          </div>
+
           <div className="input-container">
             <label htmlFor="email">{t("login.email-label")}</label>
             <input
@@ -129,6 +106,7 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
           <div className="input-container">
             <label htmlFor="password">{t("login.password-label")}</label>
             <div className="icon">
@@ -145,20 +123,26 @@ function Login() {
               />
             </div>
           </div>
+
           <p className="forgot">Forgot Password?</p>
+
           <button type="submit" className="login-btn">
-            Sign In
+            {t("login.signin")}
           </button>
-          <div class="line-with-text">
+
+          <div className="line-with-text">
             <span>OR</span>
           </div>
-        </form>
 
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-        />
+          <div className="google-btn">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+            />
+          </div>
+        </form>
       </div>
+
       <ToastContainer />
     </>
   );

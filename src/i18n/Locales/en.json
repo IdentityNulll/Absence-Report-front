@@ -7,7 +7,8 @@
     "password-label": "Your Password",
     "password": "Enter Your password",
     "button": "Sign In",
-    "or": "or"
+    "or": "or",
+    "signin": "Sign in"
   },
   "dashboard" : {
     "title": "Welcome back,",
