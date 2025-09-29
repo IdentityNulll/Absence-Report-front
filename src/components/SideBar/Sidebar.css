@@ -84,10 +84,10 @@
   gap: 10px;
   align-items: center;
 }
-.logo-img {
+.logo-img1 {
   width: 50px;
   height: 50px;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   background-color: var(--main-color);
