@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Dashboard.css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function Dashboard() {
   const { t } = useTranslation();
@@ -18,6 +20,16 @@ function Dashboard() {
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1500,
+      once: true,
+      startEvent: "DOMContentLoaded",
+      offset: 200,
+    });
+    AOS.refresh();
   }, []);
 
   const formatTime = (date) => {
@@ -41,7 +53,7 @@ function Dashboard() {
             <Link to={"/admin/notifications"} className="notification">
               <FontAwesomeIcon icon={faBell} /> <sup>8</sup>
             </Link>
-            <Link to={"/admin/profile"} className="logo-img">
+            <Link to={"/admin/profile"} className="logo-img1">
               S
             </Link>
           </div>
@@ -49,7 +61,7 @@ function Dashboard() {
       </div>
 
       {/* Welcome Card */}
-      <div className="welcome-card">
+      <div className="welcome-card" data-aos="fade-right" data-aos-delay="100">
         <div className="welcome-left">
           <div className="welcome-icon">
             <FontAwesomeIcon icon={faGraduationCap} />
@@ -64,7 +76,7 @@ function Dashboard() {
           <div className="time">{formatTime(currentTime)}</div>
         </div>
       </div>
-      <div className="stats">
+      <div className="stats" data-aos="fade-left" data-aos-delay="100">
         <div className="stats-box item1">
           <FontAwesomeIcon icon={faBookmark} />
           <p className="number">4</p>
@@ -87,7 +99,11 @@ function Dashboard() {
         </div>
       </div>
       {/* Classes + Quick Stats */}
-      <div className="classes-container">
+      <div
+        className="classes-container"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
         {/* My Classes */}
         <div className="my-classes">
           <h3>

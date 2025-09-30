@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import Sidebar from "../../../components/SideBar/SibeBar";
 import "./Schedule.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarAlt,
+  faGraduationCap,
+} from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function Schedule() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -10,11 +16,46 @@ function Schedule() {
 
   // Mock class schedule data
   const scheduleData = [
-    { id: 1, date: "2025-09-25", class: "Mathematics A", subject: "Algebra", time: "08:00 AM - 09:30 AM", room: "101" },
-    { id: 2, date: "2025-09-25", class: "Physics", subject: "Mechanics", time: "10:00 AM - 11:30 AM", room: "203" },
-    { id: 3, date: "2025-09-25", class: "Chemistry", subject: "Organic Chemistry", time: "02:00 PM - 03:30 PM", room: "205" },
-    { id: 4, date: "2025-09-26", class: "Advanced Mathematics", subject: "Calculus", time: "03:00 PM - 04:30 PM", room: "102" },
-    { id: 5, date: "2025-09-26", class: "History", subject: "World War II", time: "11:00 AM - 12:30 PM", room: "201" },
+    {
+      id: 1,
+      date: "2025-09-25",
+      class: "Mathematics A",
+      subject: "Algebra",
+      time: "08:00 AM - 09:30 AM",
+      room: "101",
+    },
+    {
+      id: 2,
+      date: "2025-09-25",
+      class: "Physics",
+      subject: "Mechanics",
+      time: "10:00 AM - 11:30 AM",
+      room: "203",
+    },
+    {
+      id: 3,
+      date: "2025-09-25",
+      class: "Chemistry",
+      subject: "Organic Chemistry",
+      time: "02:00 PM - 03:30 PM",
+      room: "205",
+    },
+    {
+      id: 4,
+      date: "2025-09-26",
+      class: "Advanced Mathematics",
+      subject: "Calculus",
+      time: "03:00 PM - 04:30 PM",
+      room: "102",
+    },
+    {
+      id: 5,
+      date: "2025-09-26",
+      class: "History",
+      subject: "World War II",
+      time: "11:00 AM - 12:30 PM",
+      room: "201",
+    },
   ];
 
   const filteredData = scheduleData.filter(
@@ -23,22 +64,24 @@ function Schedule() {
       (!selectedClass || item.class === selectedClass)
   );
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
-    <body className="body">
+    <body className="body" >
       {/* Header */}
       <div className="header">
         <div className="header-container">
           <div className="header-left">
             <Sidebar />
           </div>
-          <div className="header-profile">
-            <h2>Schedule</h2>
-          </div>
+          <div className="header-profile">{/* <h2>Schedule</h2> */}</div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="filters-container">
+      <div className="filters-container" data-aos="fade-up">
         <div className="filter-box">
           <label>
             <FontAwesomeIcon icon={faCalendarAlt} /> Select Date:
@@ -68,7 +111,7 @@ function Schedule() {
       </div>
 
       {/* Schedule Table */}
-      <div className="schedule-container">
+      <div className="schedule-container" data-aos="fade-up">
         <h3>Class Schedule</h3>
         {filteredData.length > 0 ? (
           <table className="schedule-table">
