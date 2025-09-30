@@ -25,6 +25,7 @@
     "react-i18next": "^15.7.3",
     "react-router-dom": "^7.9.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.2.1",
     "toastify": "^2.0.1",
     "toastify-js": "^1.12.0"
   },
