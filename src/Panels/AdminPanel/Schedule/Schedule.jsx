@@ -7,8 +7,6 @@ import {
   faGraduationCap,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 function Schedule() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -64,10 +62,6 @@ function Schedule() {
       (!selectedClass || item.class === selectedClass)
   );
 
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
-  }, []);
-
   return (
     <body className="body" >
       {/* Header */}
@@ -81,7 +75,7 @@ function Schedule() {
       </div>
 
       {/* Filters */}
-      <div className="filters-container" data-aos="fade-up">
+      <div className="filters-container fade-in-up">
         <div className="filter-box">
           <label>
             <FontAwesomeIcon icon={faCalendarAlt} /> Select Date:
@@ -111,7 +105,7 @@ function Schedule() {
       </div>
 
       {/* Schedule Table */}
-      <div className="schedule-container" data-aos="fade-up">
+      <div className="schedule-container fade-in-up">
         <h3>Class Schedule</h3>
         {filteredData.length > 0 ? (
           <table className="schedule-table">

@@ -374,7 +374,6 @@ a {
 .quick-card strong {
   font-weight: 600;
   color: #555;
-
 }
 
 /* Colors */
@@ -392,5 +391,49 @@ a {
 @media (max-width: 992px) {
   .classes-container {
     grid-template-columns: 1fr;
+  }
+}
+
+/* === Animations === */
+
+/* Fade In Right */
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(-50px);
+  animation: fadeInRight 0.8s ease-out forwards;
+}
+
+@keyframes fadeInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade In Left */
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(50px);
+  animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+@keyframes fadeInLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade In Up */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(50px);
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

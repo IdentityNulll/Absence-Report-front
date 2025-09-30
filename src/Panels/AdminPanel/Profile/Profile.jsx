@@ -13,8 +13,6 @@ import { faBell } from "@fortawesome/free-regular-svg-icons";
 import "./Profile.css";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 function Profile() {
   const [activeRole, setActiveRole] = useState(null); // teacher | student | admin
@@ -29,9 +27,6 @@ function Profile() {
     admin: [{ name: "Admin John", email: "admin@school.com" }],
   };
 
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
-  }, []);
 
   return (
     <div className="profile-page">
@@ -51,7 +46,7 @@ function Profile() {
       </div>
 
       {/* Profile Card */}
-      <div className="profile-card" data-aos="fade-up">
+      <div className="profile-card fade-in-up">
         <FontAwesomeIcon icon={faUser} className="profile-icon" />
         <h2>Sarah Johnson</h2>
         <p className="profile-role">System Admin</p>
@@ -64,7 +59,7 @@ function Profile() {
       </div>
 
       {/* Role Management */}
-      <div className="role-section" data-aos="fade-up">
+      <div className="role-section fade-in-up">
         <h3>Manage Users</h3>
         <div className="role-buttons">
           <button
