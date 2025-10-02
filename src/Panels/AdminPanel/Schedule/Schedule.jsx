@@ -5,15 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
   faGraduationCap,
+  faPlus,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
 
 function Schedule() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
-
-  // Mock class schedule data
-  const scheduleData = [
+  const [scheduleData, setScheduleData] = useState([
     {
       id: 1,
       date: "2025-09-25",
@@ -54,7 +53,16 @@ function Schedule() {
       time: "11:00 AM - 12:30 PM",
       room: "201",
     },
-  ];
+  ]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [newSchedule, setNewSchedule] = useState({
+    date: "",
+    class: "",
+    subject: "",
+    time: "",
+    room: "",
+  });
 
   const filteredData = scheduleData.filter(
     (item) =>
@@ -62,15 +70,33 @@ function Schedule() {
       (!selectedClass || item.class === selectedClass)
   );
 
+  const handleAddSchedule = () => {
+    if (
+      !newSchedule.date ||
+      !newSchedule.class ||
+      !newSchedule.subject ||
+      !newSchedule.time ||
+      !newSchedule.room
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+    setScheduleData([
+      ...scheduleData,
+      { id: Date.now(), ...newSchedule },
+    ]);
+    setShowModal(false);
+    setNewSchedule({ date: "", class: "", subject: "", time: "", room: "" });
+  };
+
   return (
-    <body className="body" >
+    <div className="body">
       {/* Header */}
       <div className="header">
         <div className="header-container">
           <div className="header-left">
             <Sidebar />
           </div>
-          <div className="header-profile">{/* <h2>Schedule</h2> */}</div>
         </div>
       </div>
 
@@ -102,6 +128,9 @@ function Schedule() {
             <option value="History">History</option>
           </select>
         </div>
+        <button className="add-btn" onClick={() => setShowModal(true)}>
+          <FontAwesomeIcon icon={faPlus} /> Add Schedule
+        </button>
       </div>
 
       {/* Schedule Table */}
@@ -134,7 +163,65 @@ function Schedule() {
           <p className="no-results">No schedule found for selected filters.</p>
         )}
       </div>
-    </body>
+
+      {/* Modal for adding schedule */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Create New Schedule</h3>
+            <input
+              type="date"
+              placeholder="Date"
+              value={newSchedule.date}
+              onChange={(e) =>
+                setNewSchedule({ ...newSchedule, date: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Class"
+              value={newSchedule.class}
+              onChange={(e) =>
+                setNewSchedule({ ...newSchedule, class: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Subject"
+              value={newSchedule.subject}
+              onChange={(e) =>
+                setNewSchedule({ ...newSchedule, subject: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Time"
+              value={newSchedule.time}
+              onChange={(e) =>
+                setNewSchedule({ ...newSchedule, time: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Room"
+              value={newSchedule.room}
+              onChange={(e) =>
+                setNewSchedule({ ...newSchedule, room: e.target.value })
+              }
+            />
+
+            <div className="modal-actions">
+              <button onClick={handleAddSchedule} className="save-btn">
+                Save
+              </button>
+              <button onClick={() => setShowModal(false)} className="close-btn">
+                <FontAwesomeIcon icon={faTimes} /> Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
