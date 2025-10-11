@@ -10,16 +10,50 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Dashboard.css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import api from "../../../api/axios";
 
 function Dashboard() {
   const { t } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [classes, setClasses] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [attendanceRate, setAttendanceRate] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  // Fetch dashboard data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [classRes, studentRes] = await Promise.all([
+          api.get("class/all"),
+          api.get("student"),
+        ]);
+
+        setClasses(classRes.data.data || []);
+        setStudents(studentRes.data.data || []);
+        console.log(classes);
+
+        const total = studentRes.data.data?.length || 0;
+        const presentCount = studentRes.data.data?.filter(
+          (s) => s.status === "PRESENT" || s.attendance === "present"
+        ).length;
+        setAttendanceRate(
+          total > 0 ? ((presentCount / total) * 100).toFixed(1) : 0
+        );
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const formatTime = (date) => {
     return date.toLocaleTimeString("en-US", {
@@ -30,9 +64,12 @@ function Dashboard() {
     });
   };
 
+  if (loading) {
+    return <div className="loading">Loading dashboard...</div>;
+  }
+
   return (
-    <body className="body">
-      {/* Header */}
+    <div className="body">
       <div className="header">
         <div className="header-container">
           <div className="header-left">
@@ -50,7 +87,7 @@ function Dashboard() {
       </div>
 
       {/* Welcome Card */}
-      <div className="welcome-card fade-in-right" >
+      <div className="welcome-card fade-in-right">
         <div className="welcome-left">
           <div className="welcome-icon">
             <FontAwesomeIcon icon={faGraduationCap} />
@@ -65,108 +102,97 @@ function Dashboard() {
           <div className="time">{formatTime(currentTime)}</div>
         </div>
       </div>
-      <div className="stats fade-in-left" >
+
+      {/* Stats Section */}
+      <div className="stats fade-in-left">
         <div className="stats-box item1">
           <FontAwesomeIcon icon={faBookmark} />
-          <p className="number">4</p>
+          <p className="number">{classes.length}</p>
           <p className="text">{t("dashboard.stats-classes")}</p>
         </div>
         <div className="stats-box item2">
           <FontAwesomeIcon icon={faUsers} />
-          <p className="number">100</p>
+          <p className="number">{students.length}</p>
           <p className="text">{t("dashboard.stats-students")}</p>
         </div>
         <div className="stats-box item3">
           <FontAwesomeIcon icon={faClock} />
-          <p className="number">12</p>
+          <p className="number">—</p>
           <p className="text">{t("dashboard.stats-hours")}</p>
         </div>
         <div className="stats-box item4">
           <FontAwesomeIcon icon={faGraduationCap} />
-          <p className="number">95%</p>
+          <p className="number">{attendanceRate}%</p>
           <p className="text">{t("dashboard.stats-rate")}</p>
         </div>
       </div>
+
       {/* Classes + Quick Stats */}
-      <div
-        className="classes-container fade-in-up"
-      >
+      <div className="classes-container fade-in-up">
         {/* My Classes */}
         <div className="my-classes">
           <h3>
             <FontAwesomeIcon icon={faGraduationCap} /> My Classes
           </h3>
 
-          <div className="class-card purple">
-            <div className="class-left">
-              <div className="class-icon">M</div>
-              <div>
-                <h4>Mathematics A</h4>
-                <p>Room 101 • Mon, Wed, Fri - 8:00 AM</p>
+          {classes.slice(0, 4).map((cls) => (
+            <div className="class-card purple" key={cls.uuid}>
+              <div className="class-left">
+                <div className="class-icon">
+                  {cls.name.slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <h4>{cls.name}</h4>
+                  <p>Teacher: {cls.teacher}</p>
+                </div>
               </div>
+              <span className="students">{cls.studentCount} students</span>
             </div>
-            <span className="students">28 students</span>
-          </div>
-
-          <div className="class-card blue">
-            <div className="class-left">
-              <div className="class-icon">P</div>
-              <div>
-                <h4>Physics</h4>
-                <p>Lab 203 • Tue, Thu - 10:00 AM</p>
-              </div>
-            </div>
-            <span className="students">24 students</span>
-          </div>
-
-          <div className="class-card green">
-            <div className="class-left">
-              <div className="class-icon">C</div>
-              <div>
-                <h4>Chemistry</h4>
-                <p>Lab 205 • Mon, Wed, Fri - 2:00 PM</p>
-              </div>
-            </div>
-            <span className="students">26 students</span>
-          </div>
-
-          <div className="class-card orange">
-            <div className="class-left">
-              <div className="class-icon">AM</div>
-              <div>
-                <h4>Advanced Mathematics</h4>
-                <p>Room 102 • Tue, Thu - 3:00 PM</p>
-              </div>
-            </div>
-            <span className="students">22 students</span>
-          </div>
+          ))}
         </div>
 
         {/* Quick Stats */}
         <div className="quick-stats">
           <h3>Quick Stats</h3>
-
           <div className="quick-card present">
             <p>
-              <span>●</span> Present Today{" "}
+              <span>●</span> Present Today
             </p>
-            <strong>25</strong>
+            <strong>
+              {
+                students.filter(
+                  (s) => s.status === "PRESENT" || s.attendance === "present"
+                ).length
+              }
+            </strong>
           </div>
           <div className="quick-card absent">
             <p>
-              <span>●</span> Absent Today{" "}
+              <span>●</span> Absent Today
             </p>
-            <strong>2</strong>
+            <strong>
+              {
+                students.filter(
+                  (s) => s.status === "ABSENT" || s.attendance === "absent"
+                ).length
+              }
+            </strong>
           </div>
           <div className="quick-card late">
             <p>
               <span>●</span> Late Arrivals
-            </p>{" "}
-            <strong>1</strong>
+            </p>
+            <strong>
+              {
+                students.filter(
+                  (s) => s.status === "LATE" || s.attendance === "late"
+                ).length
+              }
+            </strong>
           </div>
         </div>
       </div>
-    </body>
+    </div>
   );
 }
 

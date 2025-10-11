@@ -11,52 +11,59 @@ import "./App.css";
 import { ThemeProvider } from "./context/Theme.context.jsx";
 import "./styles/Theme.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Layout from "./components/Layout.jsx";
 
 function App() {
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <ThemeProvider>
         <Routes>
+          {/* Public route (no loader, no protection) */}
           <Route path="/" element={<Login />} />
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/notifications"
-            element={
-              <ProtectedRoute>
-                <Notifications/>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/schedule"
-            element={
-              <ProtectedRoute>
-                <Schedule />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-          path="/admin/analytics"
-          element={
-            <ProtectedRoute>
-              <Analytics/>
-            </ProtectedRoute>
-          }/>
+
+          {/* All protected admin routes (with loader + protection) */}
+          <Route element={<Layout />}>
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/notifications"
+              element={
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/schedule"
+              element={
+                <ProtectedRoute>
+                  <Schedule />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/analytics"
+              element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
         </Routes>
       </ThemeProvider>
     </GoogleOAuthProvider>
