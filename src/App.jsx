@@ -18,10 +18,7 @@ function App() {
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <ThemeProvider>
         <Routes>
-          {/* Public route (no loader, no protection) */}
           <Route path="/" element={<Login />} />
-
-          {/* All protected admin routes (with loader + protection) */}
           <Route element={<Layout />}>
             <Route
               path="/admin/dashboard"

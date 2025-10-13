@@ -11,6 +11,7 @@ import "./Dashboard.css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../../../api/axios";
+import Header from "../../../components/Header/Header";
 
 function Dashboard() {
   const { t } = useTranslation();
@@ -70,21 +71,7 @@ function Dashboard() {
 
   return (
     <div className="body">
-      <div className="header">
-        <div className="header-container">
-          <div className="header-left">
-            <Sidebar />
-          </div>
-          <div className="header-profile">
-            <Link to={"/admin/notifications"} className="notification">
-              <FontAwesomeIcon icon={faBell} /> <sup>8</sup>
-            </Link>
-            <Link to={"/admin/profile"} className="logo-img1">
-              S
-            </Link>
-          </div>
-        </div>
-      </div>
+      <Header/>
 
       {/* Welcome Card */}
       <div className="welcome-card fade-in-right">

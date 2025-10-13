@@ -41,12 +41,13 @@ function Login() {
         password,
       });
 
-      const { data, message } = response.data;
+      const { data, message, currentUserId } = response.data;
       console.log(response.data);
 
       if (data?.token) {
         localStorage.setItem("token", data.token);
         toast.success("Login successful! Redirecting...");
+        localStorage.setItem("id", currentUserId);
         setTimeout(() => {
           if (localStorage.getItem("token")) {
             navigate("/admin/dashboard");
@@ -55,6 +56,7 @@ function Login() {
       }
     } catch (error) {
       console.error(error);
+      currentUserId;
       toast.error(error.response?.data?.message || "Something went wrong.");
     }
   };
