@@ -1,305 +1,265 @@
-.profile-page {
-  background: var(--bg-color);
-  color: var(--text-color);
+.profile-wrapper {
   min-height: 100vh;
-  padding: 20px;
-  transition: background 0.4s ease, color 0.4s ease;
-  font-family: "Inter", sans-serif;
-}
-
-/* Header */
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  padding: 0 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-  transition: margin-left 0.3s ease;
-}
-
-.notification {
-  font-size: 18px;
-  cursor: pointer;
-  color: var(--text-color);
-  transition: transform 0.2s ease;
-}
-.notification:hover {
-  transform: scale(1.2);
-}
-
-.logo-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--linear-gradient);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  font-weight: bold;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.logo-img:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
-}
-
-/* Profile Card */
-.profile-card {
-  text-align: center;
-  background: var(--bg-main-color);
-  padding: 40px 30px;
-  border-radius: 20px;
-  margin: 30px auto;
-  color: #fff;
-  max-width: 600px;
-  width: 100%;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-}
-
-.profile-icon {
-  font-size: 60px;
-  margin-bottom: 15px;
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Floating animation */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-/* Buttons */
-.btn-gradient {
-  background: var(--linear-gradient);
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.4s ease;
-}
-.btn-gradient:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-}
-
-.btn-outline {
-  background: transparent;
-  border: 2px solid var(--main-color);
-  padding: 12px 18px;
-  border-radius: 12px;
-  cursor: pointer;
-  margin: 10px;
-  color: var(--text-color);
-  font-weight: 500;
-  transition: all 0.25s ease;
-}
-.btn-outline:hover {
-  background: var(--main-color);
-  color: #fff;
-  transform: scale(1.05);
-}
-
-.btn-close {
-  margin-top: 15px;
-  background: #999;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #fff;
-  transition: background 0.25s ease, transform 0.2s ease;
-}
-.btn-close:hover {
-  background: #777;
-  transform: scale(1.05);
-}
-
-/* Role Section */
-.role-section {
-  text-align: center;
-  margin-top: 40px;
-}
-
-/* Modal Overlay */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 0.3s ease forwards;
-  z-index: 1000;
-}
-
-/* Modal Content */
-.modal-content {
-  background: var(--bg-main-color);
-  padding: 30px 25px;
-  border-radius: 20px;
-  width: 450px;
-  max-width: 90%;
-  transform: scale(0.9);
-  animation: scaleIn 0.3s ease forwards;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
-  color: #fff;
+  background: var(--bg-color);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  /* padding: 40px 20px; */
+  transition: var(--transition);
 }
 
-/* Modal Header */
-.modal-content h3 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 10px;
+.profile-container {
+  width: 100%;
+  max-width: 900px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-medium);
+  border-radius: var(--radius);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
 }
 
-/* Modal List */
-.modal-content ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
 }
-.modal-content ul li {
-  padding: 10px 12px;
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--main-color),
+    var(--secondary-color)
+  );
+  color: #fff;
+  font-size: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-medium);
   margin-bottom: 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-role {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.profile-email {
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.manage-section {
+  width: 100%;
+  text-align: center;
+}
+
+.manage-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.manage-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--main-color),
+    var(--secondary-color)
+  );
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 24px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  border: 2px solid var(--main-color);
+  background: transparent;
+  color: var(--text-color);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-secondary:hover {
+  background: var(--main-color);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-cancel:hover {
+  background: var(--border-color);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+}
+
+.modal-box {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 15px;
+  animation: fadeInUp 0.3s ease;
+}
+
+.modal-box h3 {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.modal-box input {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--bg-color);
+  color: var(--text-color);
+  outline: none;
+  transition: var(--transition);
+}
+.modal-box input:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 6px var(--main-color);
+}
+
+@media (max-width: 700px) {
+  .profile-container {
+    padding: 30px 20px;
+  }
+  .manage-buttons {
+    flex-direction: column;
+  }
+}
+/* Large manage modal */
+.modal-box.large {
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-box.small {
+  max-width: 400px;
+}
+
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 500;
-  transition: background 0.2s ease;
-}
-.modal-content ul li:hover {
-  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Create / Close Buttons */
-.btn-gradient,
-.btn-close {
-  width: 100%;
-  padding: 12px 0;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 500;
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.25s ease;
 }
 
-.btn-gradient {
-  background: var(--linear-gradient);
-  color: #fff;
-  border: none;
-}
-.btn-gradient:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+.add-user-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
-.btn-close {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: none;
-  margin-top: 10px;
-}
-.btn-close:hover {
-  background: rgba(255, 255, 255, 0.35);
-  transform: scale(1.03);
-}
-
-/* Form Inputs */
-.create-form input {
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  outline: none;
-  width: 100%;
-  transition: border 0.25s ease, box-shadow 0.25s ease;
-}
-.create-form input:focus {
-  border-color: var(--main-color);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+.add-user-form input {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--bg-color);
+  color: var(--text-color);
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.user-list ul {
+  list-style: none;
+  padding: 0;
 }
 
-/* Fade In Up Animation */
-.fade-in-up {
-  opacity: 0;
-  transform: translateY(40px);
-  animation: fadeInUp 0.8s ease-out forwards;
+.user-list li {
+  background: var(--bg-color);
+  padding: 10px 15px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+
+.modal-box.large {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 900px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  padding: 30px;
+  animation: fadeInUp 0.3s ease;
 }
 
 @keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, -50%);
   }
 }
 
-/* Fade In Right */
-.fade-in-right {
-  opacity: 0;
-  transform: translateX(-40px);
-  animation: fadeInRight 0.8s ease-out forwards;
-}
-
-@keyframes fadeInRight {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Fade In Left */
-.fade-in-left {
-  opacity: 0;
-  transform: translateX(40px);
-  animation: fadeInLeft 0.8s ease-out forwards;
-}
-
-@keyframes fadeInLeft {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.user-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }

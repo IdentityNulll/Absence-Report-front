@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../../components/SideBar/SibeBar";
 import "./Notifications.css";
+import Header from "../../../components/Header/Header";
 
 function Notifications() {
   const [notifications, setNotifications] = useState([
@@ -25,10 +26,7 @@ function Notifications() {
 
   return (
     <div className="notifications-page">
-      <Sidebar />
-
       <div className="notifications-container fade-in-up1">
-        {/* Header with Create Button */}
         <div className="notifications-header">
           <h2 className="page-title">Notifications</h2>
           <button className="create-btn" onClick={() => setShowPopup(true)}>
