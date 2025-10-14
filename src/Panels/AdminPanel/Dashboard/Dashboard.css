@@ -18,14 +18,10 @@ a {
   height: 64px;
   padding: 0 20px;
   background: var(--card-bg);
+  z-index: 999 !important;
   box-shadow: var(--shadow-light);
   border-bottom: 1px solid var(--border-color);
   transition: var(--transition);
-}
-.header-profile {
-  display: flex;
-  align-items: center;
-  gap: 20px;
 }
 .logo-img1 {
   width: 40px;
@@ -69,11 +65,13 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  z-index: 999 !important;
   box-shadow: var(--shadow-medium);
 }
 .welcome-left {
   display: flex;
   align-items: center;
+  z-index: 999 !important;
   gap: 15px;
 }
 .welcome-icon {

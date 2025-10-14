@@ -1,11 +1,8 @@
 .schedule-page {
-  min-height: 100vh;
+  border-radius: 10px;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  background: var(--bg-color);
-  color: var(--text-color);
-  transition: var(--transition);
 }
 
 /* ---------- DAY SWIPER ---------- */
@@ -15,6 +12,15 @@
   align-items: center;
   gap: 1rem;
   margin: 2rem 0;
+}
+.schedule-container {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: var(--transition);
+  min-height: 60vh;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
 }
 
 .day-swiper h2 {

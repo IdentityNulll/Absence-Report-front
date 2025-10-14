@@ -66,94 +66,96 @@ function Schedule() {
     <div className="schedule-page">
       <Header />
 
-      <div className="day-swiper fade-in-up">
-        <button onClick={() => changeDay(-1)}>←</button>
-        <h2>{formatDate(selectedDate)}</h2>
-        <button onClick={() => changeDay(1)}>→</button>
-      </div>
+      <div className="schedule-container">
+        <div className="day-swiper fade-in-up">
+          <button onClick={() => changeDay(-1)}>←</button>
+          <h2>{formatDate(selectedDate)}</h2>
+          <button onClick={() => changeDay(1)}>→</button>
+        </div>
 
-      <div className="filters-container fade-in-up">
-        <select
-          value={selectedClass}
-          onChange={(e) => setSelectedClass(e.target.value)}
-        >
-          <option value="">All Classes</option>
-          {classes.map((cls) => (
-            <option key={cls.id} value={cls.name}>
-              {cls.name}
-            </option>
-          ))}
-        </select>
+        <div className="filters-container fade-in-up">
+          <select
+            value={selectedClass}
+            onChange={(e) => setSelectedClass(e.target.value)}
+          >
+            <option value="">All Classes</option>
+            {classes.map((cls) => (
+              <option key={cls.id} value={cls.name}>
+                {cls.name}
+              </option>
+            ))}
+          </select>
 
-        <button className="add-btn" onClick={() => setShowPopup(true)}>
-          + Add Schedule
-        </button>
-      </div>
+          <button className="add-btn" onClick={() => setShowPopup(true)}>
+            + Add Schedule
+          </button>
+        </div>
 
-      <div className="periods-container fade-in-up">
-        {filtered.length > 0 ? (
-          filtered.map((p) => (
-            <div key={p.id} className="period-card">
-              <h4>{p.period}</h4>
-              <p>{p.time}</p>
-              <span>{p.class}</span>
-            </div>
-          ))
-        ) : (
-          <p className="empty-text">No schedules found</p>
-        )}
-      </div>
+        <div className="periods-container fade-in-up">
+          {filtered.length > 0 ? (
+            filtered.map((p) => (
+              <div key={p.id} className="period-card">
+                <h4>{p.period}</h4>
+                <p>{p.time}</p>
+                <span>{p.class}</span>
+              </div>
+            ))
+          ) : (
+            <p className="empty-text">No schedules found</p>
+          )}
+        </div>
 
-      {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <h3>Add Schedule</h3>
+        {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup-card">
+              <h3>Add Schedule</h3>
 
-            <input
-              type="date"
-              value={newSchedule.date}
-              onChange={(e) =>
-                setNewSchedule({ ...newSchedule, date: e.target.value })
-              }
-            />
+              <input
+                type="date"
+                value={newSchedule.date}
+                onChange={(e) =>
+                  setNewSchedule({ ...newSchedule, date: e.target.value })
+                }
+              />
 
-            <select
-              value={newSchedule.class}
-              onChange={(e) =>
-                setNewSchedule({ ...newSchedule, class: e.target.value })
-              }
-            >
-              <option value="">Select Class</option>
-              {classes.map((cls) => (
-                <option key={cls.id} value={cls.name}>
-                  {cls.name}
-                </option>
-              ))}
-            </select>
-
-            <input
-              type="text"
-              placeholder="Period (e.g. Period 4)"
-              value={newSchedule.period}
-              onChange={(e) =>
-                setNewSchedule({ ...newSchedule, period: e.target.value })
-              }
-            />
-
-            <div className="popup-actions">
-              <button
-                className="cancel-btn"
-                onClick={() => setShowPopup(false)}
+              <select
+                value={newSchedule.class}
+                onChange={(e) =>
+                  setNewSchedule({ ...newSchedule, class: e.target.value })
+                }
               >
-                Cancel
-              </button>
-              <button className="save-btn" onClick={handleCreate}>
-                Save
-              </button>
+                <option value="">Select Class</option>
+                {classes.map((cls) => (
+                  <option key={cls.id} value={cls.name}>
+                    {cls.name}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="text"
+                placeholder="Period (e.g. Period 4)"
+                value={newSchedule.period}
+                onChange={(e) =>
+                  setNewSchedule({ ...newSchedule, period: e.target.value })
+                }
+              />
+
+              <div className="popup-actions">
+                <button
+                  className="cancel-btn"
+                  onClick={() => setShowPopup(false)}
+                >
+                  Cancel
+                </button>
+                <button className="save-btn" onClick={handleCreate}>
+                  Save
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

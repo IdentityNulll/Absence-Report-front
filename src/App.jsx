@@ -13,11 +13,13 @@ import "./styles/Theme.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Layout from "./components/Layout.jsx";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
+import AdminAnimate from "./components/Animation/AdminAnimate.jsx";
 
 function App() {
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <ThemeProvider>
+        <AdminAnimate/>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route element={<Layout />}>

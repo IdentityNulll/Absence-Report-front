@@ -13,6 +13,7 @@ import "aos/dist/aos.css";
 import ThemeSwitcher from "../../components/ThemeSwitcher";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
 import api from "../../api/axios";
+import AdminAnimate from "../../components/Animation/AdminAnimate";
 
 function Login() {
   const { t } = useTranslation();

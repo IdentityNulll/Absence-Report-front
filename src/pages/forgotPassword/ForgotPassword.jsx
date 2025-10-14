@@ -3,6 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../api/axios";
 import "./ForgotPassword.css";
+import AdminAnimate from "../../components/Animation/AdminAnimate";
 
 export default function ForgotPassword() {
   const [step, setStep] = useState(1);
@@ -63,58 +64,60 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="forgot-wrapper">
-      <div className="forgot-box">
-        <h2>Reset Password</h2>
-        <p className="forgot-subtext">
-          {step === 1 && "Enter your email to receive a verification code."}
-          {step === 2 && "Enter the verification code sent to your email."}
-          {step === 3 && "Enter your new password to complete reset."}
-        </p>
+    <>
+      <div className="forgot-wrapper">
+        <div className="forgot-box">
+          <h2>Reset Password</h2>
+          <p className="forgot-subtext">
+            {step === 1 && "Enter your email to receive a verification code."}
+            {step === 2 && "Enter the verification code sent to your email."}
+            {step === 3 && "Enter your new password to complete reset."}
+          </p>
 
-        {step === 1 && (
-          <>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-            />
-            <button onClick={handleSendCode} disabled={loading}>
-              {loading ? "Sending..." : "Send Code"}
-            </button>
-          </>
-        )}
+          {step === 1 && (
+            <>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+              />
+              <button onClick={handleSendCode} disabled={loading}>
+                {loading ? "Sending..." : "Send Code"}
+              </button>
+            </>
+          )}
 
-        {step === 2 && (
-          <>
-            <input
-              type="number"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Enter verification code"
-            />
-            <button onClick={handleVerifyCode} disabled={loading}>
-              {loading ? "Verifying..." : "Verify Code"}
-            </button>
-          </>
-        )}
+          {step === 2 && (
+            <>
+              <input
+                type="number"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter verification code"
+              />
+              <button onClick={handleVerifyCode} disabled={loading}>
+                {loading ? "Verifying..." : "Verify Code"}
+              </button>
+            </>
+          )}
 
-        {step === 3 && (
-          <>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Enter new password"
-            />
-            <button onClick={handleSetNewPassword} disabled={loading}>
-              {loading ? "Saving..." : "Save Password"}
-            </button>
-          </>
-        )}
+          {step === 3 && (
+            <>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+              />
+              <button onClick={handleSetNewPassword} disabled={loading}>
+                {loading ? "Saving..." : "Save Password"}
+              </button>
+            </>
+          )}
+        </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
-    </div>
+    </>
   );
 }
