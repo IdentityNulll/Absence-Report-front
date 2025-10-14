@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../../../api/axios";
 import Header from "../../../components/Header/Header";
+import Loader from "../../../components/loader/Loader";
 
 function Dashboard() {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ function Dashboard() {
   };
 
   if (loading) {
-    return <div className="loading">Loading dashboard...</div>;
+    return <Loader/>;
   }
 
   return (

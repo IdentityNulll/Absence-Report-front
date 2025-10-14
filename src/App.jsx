@@ -12,6 +12,7 @@ import { ThemeProvider } from "./context/Theme.context.jsx";
 import "./styles/Theme.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Layout from "./components/Layout.jsx";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 
 function App() {
   return (
@@ -34,6 +35,12 @@ function App() {
                 <ProtectedRoute>
                   <Notifications />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/forgot-password"
+              element={
+                  <ForgotPassword />
               }
             />
             <Route
