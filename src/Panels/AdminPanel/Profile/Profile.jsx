@@ -52,8 +52,6 @@ export default function Profile() {
     };
     fetchAdmin();
   }, []);
-
-  // Fetch users for each category
   const openManageModal = async (type) => {
     setManageType(type);
     setShowManageModal(true);
@@ -78,7 +76,7 @@ export default function Profile() {
 
       toast.success("User added!");
       setNewUser({ firstName: "", lastName: "", mail: "" });
-      openManageModal(manageType); // Refresh list
+      openManageModal(manageType); 
     } catch {
       toast.error("Failed to add user");
     }

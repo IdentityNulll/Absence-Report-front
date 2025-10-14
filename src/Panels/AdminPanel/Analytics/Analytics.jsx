@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import "./Analytics.css";
+import Header from "../../../components/Header/Header";
 
 const data = [
   { date: "Mon", Present: 25, Absent: 2, Sick: 1, Family: 0, Late: 1 },
@@ -41,19 +42,8 @@ const AnalyticsChart = memo(() => (
 function Analytics() {
   return (
     <div className="body">
-      {/* Header */}
-      <div className="header">
-        <div className="header-container">
-          <div className="header-left">
-            <Sidebar />
-          </div>
-          <div className="header-title">
-            <h2>Analytics</h2>
-          </div>
-        </div>
-      </div>
+      <Header/>
 
-      {/* Chart Container */}
       <div className="analytics-container fade-in-up">
         <h3>Attendance Overview</h3>
         <div className="chart-box">
