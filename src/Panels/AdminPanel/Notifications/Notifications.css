@@ -1,6 +1,5 @@
 .notifications-page {
   min-height: 100vh;
-  background: var(--bg-color);
   color: var(--text-color);
   transition: var(--transition);
 }
