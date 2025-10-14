@@ -1,191 +1,233 @@
 .notifications-page {
-  display: flex;
   min-height: 100vh;
   background: var(--bg-color);
+  color: var(--text-color);
+  transition: var(--transition);
 }
 
 .notifications-container {
-  flex: 1;
-  margin-top: 30px !important;
-  padding: 2rem;
-  max-width: 1400px;
+  max-width: 900px;
   margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  padding: 30px;
+  transition: var(--transition);
 }
 
-/* Header */
 .notifications-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  margin-bottom: 25px;
 }
 
 .page-title {
   font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--text-color);
+  font-weight: 600;
+  color: var(--main-color);
 }
 
 .create-btn {
-  background: #007bff;
-  color: white;
-  padding: 0.6rem 1.2rem;
+  background: var(--main-color);
+  color: #fff;
   border: none;
-  border-radius: 0.6rem;
-  font-weight: 600;
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: 0.2s;
+  box-shadow: var(--shadow-light);
+  transition: var(--transition);
 }
 
 .create-btn:hover {
-  background: #0056b3;
+  background: var(--accent-color);
+  transform: translateY(-2px);
 }
 
-/* Notifications List Card */
+/* ----------------------- */
+/* Notifications List */
+/* ----------------------- */
 .notifications-list-card {
-  background: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.notifications-list-card .notification-card {
-  background: var(--bg-main-color);
-  border-radius: 0.8rem;
-  padding: 1rem 1.2rem;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: 0.2s;
+.notification-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-light);
+  transition: var(--transition);
 }
 
 .notification-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
 }
 
 .notification-content h4 {
-  margin: 0;
   font-size: 1.1rem;
-  font-weight: 600;
-  color: white;
+  color: var(--main-color);
+  margin-bottom: 6px;
 }
 
 .notification-content p {
-  margin: 0.3rem 0 0;
-  color: #ccc;
+  color: var(--text-color);
+  opacity: 0.8;
   font-size: 0.95rem;
 }
 
-.notification-date {
-  font-size: 0.8rem;
-  color: white;
-  margin-left: 1rem;
-}
-
-/* Empty */
+/* Loading and Empty States */
+.loading-text,
 .empty-text {
   text-align: center;
-  color: #777;
-  margin-top: 1rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  font-size: 1rem;
+  padding: 20px 0;
 }
 
+/* ----------------------- */
 /* Popup Modal */
+/* ----------------------- */
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(15, 23, 42, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
 }
 
 .popup-card {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  width: 400px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease-out;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+  background: var(--card-bg);
+  padding: 25px 30px;
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 420px;
+  box-shadow: var(--shadow-medium);
+  animation: popIn 0.25s ease-out;
 }
 
 .popup-card h3 {
-  margin: 0;
-  font-size: 1.3rem;
-  font-weight: 600;
+  color: var(--main-color);
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  text-align: center;
 }
 
 .popup-card input,
 .popup-card textarea {
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  outline: none;
+  transition: var(--transition);
   font-size: 0.95rem;
+}
+
+.popup-card input:focus,
+.popup-card textarea:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .popup-card textarea {
   resize: none;
-  height: 80px;
+  min-height: 90px;
 }
 
 .popup-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.8rem;
-  margin-top: 0.5rem;
+  gap: 10px;
+}
+
+.cancel-btn,
+.save-btn {
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 18px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
 }
 
 .cancel-btn {
-  background: #ccc;
-  color: #333;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.cancel-btn:hover {
+  background: var(--border-color);
+  color: #fff;
 }
 
 .save-btn {
-  background: #007bff;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
+  background: var(--main-color);
+  color: #fff;
 }
 
 .save-btn:hover {
-  background: #0056b3;
+  background: var(--accent-color);
 }
 
-/* Animation */
-@keyframes fadeIn {
+/* ----------------------- */
+/* Animations */
+/* ----------------------- */
+@keyframes popIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 }
 
 .fade-in-up1 {
-  opacity: 0;
-  transform: translateY(50px);
-  animation: fadeInUp 0.8s ease-out forwards;
+  animation: fadeInUp 0.5s ease both;
 }
 
 @keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ----------------------- */
+/* Responsive */
+/* ----------------------- */
+@media (max-width: 600px) {
+  .notifications-container {
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .create-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
   }
 }

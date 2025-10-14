@@ -1,174 +1,116 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../../../components/SideBar/SibeBar";
+import React, { useState } from "react";
 import "./Schedule.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendarAlt,
-  faGraduationCap,
-  faPlus,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
-import api from "../../../api/axios";
 import Header from "../../../components/Header/Header";
 
 function Schedule() {
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [selectedClass, setSelectedClass] = useState("");
-  const [classes, setClasses] = useState([]);
-  const [timetable, setTimetable] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const [showModal, setShowModal] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [newSchedule, setNewSchedule] = useState({
     date: "",
-    classUuid: "",
-    periodUuid: "",
+    class: "",
+    period: "",
   });
 
-  // Fetch classes and timetable
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [classRes, timeRes] = await Promise.all([
-          api.get("/class/all"),
-          api.get("/timetable/1"), // You can replace 1 with actual ID or fetch all if possible
-        ]);
+  // Dummy data
+  const classes = [
+    { id: 1, name: "Class A", teacher: "Mr. Smith" },
+    { id: 2, name: "Class B", teacher: "Ms. Johnson" },
+  ];
 
-        setClasses(classRes.data || []);
-        // timetable might be single or array
-        setTimetable(
-          Array.isArray(timeRes.data) ? timeRes.data : [timeRes.data]
-        );
-      } catch (err) {
-        console.error("Error fetching schedule data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const timetable = [
+    { id: 1, period: "Period 1", time: "08:00 - 09:00", class: "Class A" },
+    { id: 2, period: "Period 2", time: "09:00 - 10:00", class: "Class B" },
+    { id: 3, period: "Period 3", time: "10:15 - 11:15", class: "Class A" },
+  ];
 
-    fetchData();
-  }, []);
+  // Filter timetable safely
+  const filtered = selectedClass
+    ? timetable.filter((t) => t.class === selectedClass)
+    : timetable;
 
-  // Filter by class and date
-  const filteredClasses = classes.filter(
-    (item) => !selectedClass || item.name === selectedClass
-  );
-
-  const handleAddSchedule = () => {
-    if (
-      !newSchedule.date ||
-      !newSchedule.classUuid ||
-      !newSchedule.periodUuid
-    ) {
-      alert("Please fill all fields");
-      return;
+  // Safe date formatter
+  const formatDate = (date) => {
+    try {
+      return date.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return "Invalid Date";
     }
-
-    // POST to backend (dummy placeholder)
-    api
-      .post("/class/add", {
-        name: newSchedule.classUuid,
-        teacher: "Unknown",
-        studentCount: 0,
-      })
-      .then(() => {
-        alert("Schedule added!");
-        setShowModal(false);
-      })
-      .catch((err) => console.error("Add schedule failed:", err));
   };
 
-  if (loading) return <p>Loading schedule...</p>;
+  // Day navigation
+  const changeDay = (offset) => {
+    setSelectedDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setDate(newDate.getDate() + offset);
+      return newDate;
+    });
+  };
+
+  // Create new schedule
+  const handleCreate = () => {
+    if (!newSchedule.date || !newSchedule.class || !newSchedule.period) {
+      alert("Please fill in all fields");
+      return;
+    }
+    alert("✅ New schedule created!");
+    setShowPopup(false);
+    setNewSchedule({ date: "", class: "", period: "" });
+  };
 
   return (
-    <div className="body">
+    <div className="schedule-page">
       <Header />
 
+      <div className="day-swiper fade-in-up">
+        <button onClick={() => changeDay(-1)}>←</button>
+        <h2>{formatDate(selectedDate)}</h2>
+        <button onClick={() => changeDay(1)}>→</button>
+      </div>
+
       <div className="filters-container fade-in-up">
-        <div className="filter-box">
-          <label>
-            <FontAwesomeIcon icon={faCalendarAlt} /> Select Date:
-          </label>
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-        </div>
+        <select
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+        >
+          <option value="">All Classes</option>
+          {classes.map((cls) => (
+            <option key={cls.id} value={cls.name}>
+              {cls.name}
+            </option>
+          ))}
+        </select>
 
-        <div className="filter-box">
-          <label>
-            <FontAwesomeIcon icon={faGraduationCap} /> Select Class:
-          </label>
-          <select
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-          >
-            <option value="">All Classes</option>
-            {classes.map((cls) => (
-              <option key={cls.uuid} value={cls.name}>
-                {cls.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button className="add-btn" onClick={() => setShowModal(true)}>
-          <FontAwesomeIcon icon={faPlus} /> Add Schedule
+        <button className="add-btn" onClick={() => setShowPopup(true)}>
+          + Add Schedule
         </button>
       </div>
 
-      <div className="schedule-container fade-in-up">
-        <h3>Class Schedule</h3>
-        {filteredClasses.length > 0 ? (
-          <table className="schedule-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Class</th>
-                <th>Teacher</th>
-                <th>Time</th>
-                <th>Students</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredClasses.map((cls) => (
-                <tr key={cls.uuid}>
-                  <td>{selectedDate || "—"}</td>
-                  <td>{cls.name}</td>
-                  <td>{cls.teacher}</td>
-                  <td>
-                    {timetable.length > 0
-                      ? `${
-                          timetable[0].startTime.hour
-                        }:${timetable[0].startTime.minute
-                          .toString()
-                          .padStart(2, "0")} - ${
-                          timetable[0].endTime.hour
-                        }:${timetable[0].endTime.minute
-                          .toString()
-                          .padStart(2, "0")}`
-                      : "—"}
-                  </td>
-                  <td>{cls.studentCount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="periods-container fade-in-up">
+        {filtered.length > 0 ? (
+          filtered.map((p) => (
+            <div key={p.id} className="period-card">
+              <h4>{p.period}</h4>
+              <p>{p.time}</p>
+              <span>{p.class}</span>
+            </div>
+          ))
         ) : (
-          <p className="no-results">No schedule found for selected filters.</p>
+          <p className="empty-text">No schedules found</p>
         )}
       </div>
 
-      {/* Modal for adding schedule */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Create New Schedule</h3>
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-card">
+            <h3>Add Schedule</h3>
 
             <input
               type="date"
-              placeholder="Date"
               value={newSchedule.date}
               onChange={(e) =>
                 setNewSchedule({ ...newSchedule, date: e.target.value })
@@ -176,40 +118,37 @@ function Schedule() {
             />
 
             <select
-              value={newSchedule.classUuid}
+              value={newSchedule.class}
               onChange={(e) =>
-                setNewSchedule({ ...newSchedule, classUuid: e.target.value })
+                setNewSchedule({ ...newSchedule, class: e.target.value })
               }
             >
               <option value="">Select Class</option>
               {classes.map((cls) => (
-                <option key={cls.uuid} value={cls.name}>
+                <option key={cls.id} value={cls.name}>
                   {cls.name}
                 </option>
               ))}
             </select>
 
-            <select
-              value={newSchedule.periodUuid}
+            <input
+              type="text"
+              placeholder="Period (e.g. Period 4)"
+              value={newSchedule.period}
               onChange={(e) =>
-                setNewSchedule({ ...newSchedule, periodUuid: e.target.value })
+                setNewSchedule({ ...newSchedule, period: e.target.value })
               }
-            >
-              <option value="">Select Period</option>
-              {timetable.map((p) => (
-                <option key={p.uuid} value={p.uuid}>
-                  {p.periodNumber} ({p.startTime.hour}:{p.startTime.minute}–
-                  {p.endTime.hour}:{p.endTime.minute})
-                </option>
-              ))}
-            </select>
+            />
 
-            <div className="modal-actions">
-              <button onClick={handleAddSchedule} className="save-btn">
-                Save
+            <div className="popup-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowPopup(false)}
+              >
+                Cancel
               </button>
-              <button onClick={() => setShowModal(false)} className="close-btn">
-                <FontAwesomeIcon icon={faTimes} /> Close
+              <button className="save-btn" onClick={handleCreate}>
+                Save
               </button>
             </div>
           </div>

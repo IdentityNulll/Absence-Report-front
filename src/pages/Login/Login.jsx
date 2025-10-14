@@ -44,10 +44,12 @@ function Login() {
       const { data, message } = response.data;
       console.log(response.data);
       const currentUserId = data?.currentUserId;
+      const firstName = data?.firstName
 
       if (data?.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("id", data.currentUserId);
+        localStorage.setItem("name", firstName)
         toast.success("Login successful! Please wait...");
         localStorage.setItem("id", currentUserId);
         setTimeout(() => {
