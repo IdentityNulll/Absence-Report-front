@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/Theme.context";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -41,51 +41,24 @@ function Login() {
         password,
       });
 
-      const { data, message, currentUserId } = response.data;
+      const { data, message } = response.data;
       console.log(response.data);
+      const currentUserId = data?.currentUserId;
 
       if (data?.token) {
         localStorage.setItem("token", data.token);
-        toast.success("Login successful! Redirecting...");
+        localStorage.setItem("id", data.currentUserId);
+        toast.success("Login successful! Please wait...");
         localStorage.setItem("id", currentUserId);
         setTimeout(() => {
           if (localStorage.getItem("token")) {
             navigate("/admin/dashboard");
           }
-        }, 1000);
+        }, 800);
       }
     } catch (error) {
       console.error(error);
-      currentUserId;
-      toast.error(error.response?.data?.message || "Something went wrong.");
-    }
-  };
-
-  const handleForgotPassword = async () => {
-    if (!email) return toast.error("Please enter your email first.");
-    try {
-      const response = await api.put(`/auth/forgetPassword?email=${email}`);
-      toast.success(response.data.message || "Verification code sent!");
-      setForgotMode(true);
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Error sending code.");
-    }
-  };
-
-  const handleVerifyCode = async () => {
-    if (!code) return toast.error("Please enter the code.");
-    try {
-      const response = await api.put("/auth/check-forget-password", {
-        mail: email,
-        code: parseInt(code),
-      });
-      toast.success(
-        response.data.message || "Code verified! You can reset password."
-      );
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Invalid code.");
+      toast.error(error.response?.data?.message || "Incorrect email or password.");
     }
   };
 
@@ -130,33 +103,12 @@ function Login() {
                 </div>
               </div>
 
-              <p className="forgot" onClick={handleForgotPassword}>
+              <Link to={"/admin/forgot-password"} className="forgot" >
                 Forgot Password?
-              </p>
+              </Link>
 
               <button type="submit" className="login-btn" onClick={handleLogin}>
                 Login
-              </button>
-            </>
-          )}
-
-          {forgotMode && (
-            <>
-              <div className="input-container">
-                <label>Verification Code</label>
-                <input
-                  type="number"
-                  placeholder="Enter code from email"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                />
-              </div>
-              <button
-                type="button"
-                className="login-btn"
-                onClick={handleVerifyCode}
-              >
-                Verify Code
               </button>
             </>
           )}

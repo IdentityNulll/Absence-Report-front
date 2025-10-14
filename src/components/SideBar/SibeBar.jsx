@@ -25,6 +25,7 @@ function Sidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("id");
     closeSidebar();
     navigate("/");
   };
@@ -36,8 +37,6 @@ function Sidebar() {
           <FontAwesomeIcon icon={faBars} />
         </button>
       )}
-
-      {/* Sidebar */}
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="logo">
           <div className="logo-text">

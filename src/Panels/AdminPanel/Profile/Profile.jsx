@@ -14,6 +14,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../api/axios";
 import "./Profile.css";
+import Loader from "../../../components/loader/Loader";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const [adminData, setAdminData] = useState(null);
@@ -51,49 +53,6 @@ export default function Profile() {
     fetchAdmin();
   }, []);
 
-  // Handle password reset flow
-  const handleSendCode = async () => {
-    if (!email) return toast.error("Email required");
-    try {
-      const res = await api.put(`/auth/forgetPassword?email=${email}`);
-      toast.success(res.data.message || "Code sent");
-      setStep(2);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Error sending code");
-    }
-  };
-
-  const handleVerifyCode = async () => {
-    if (!code) return toast.error("Code required");
-    try {
-      const res = await api.put("/auth/check-forget-password", {
-        mail: email,
-        code: parseInt(code),
-      });
-      toast.success(res.data.message || "Code verified");
-      setStep(3);
-    } catch {
-      toast.error("Invalid code");
-    }
-  };
-
-  const handleSetNewPassword = async () => {
-    if (!newPassword) return toast.error("Password required");
-    try {
-      const res = await api.put("/auth/set-new-password", {
-        mail: email,
-        password: newPassword,
-      });
-      toast.success(res.data.message || "Password changed");
-      setShowPasswordModal(false);
-      setStep(1);
-      setCode("");
-      setNewPassword("");
-    } catch {
-      toast.error("Failed to update");
-    }
-  };
-
   // Fetch users for each category
   const openManageModal = async (type) => {
     setManageType(type);
@@ -128,108 +87,53 @@ export default function Profile() {
   return (
     <div className="profile-wrapper">
       <Header />
-      <div className="profile-container">
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="profile-content">
-            <div className="profile-avatar">
-              <FontAwesomeIcon icon={faUser} />
+      <div className="profile">
+        <div className="profile-container">
+          {loading ? (
+            <Loader />
+          ) : (
+            <div className="profile-content">
+              <div className="profile-avatar">
+                <FontAwesomeIcon icon={faUser} />
+              </div>
+              <h2>
+                {adminData?.firstName} {adminData?.lastName}
+              </h2>
+              <p className="profile-role">{adminData?.role}</p>
+              <p className="profile-email">{adminData?.mail}</p>
+              <Link to={"/admin/forgot-password"} className="btn-primary">
+                <FontAwesomeIcon icon={faLock} /> Change Password
+              </Link>
             </div>
-            <h2>
-              {adminData?.firstName} {adminData?.lastName}
-            </h2>
-            <p className="profile-role">{adminData?.role}</p>
-            <p className="profile-email">{adminData?.mail}</p>
-            <button
-              className="btn-primary"
-              onClick={() => setShowPasswordModal(true)}
-            >
-              <FontAwesomeIcon icon={faLock} /> Change Password
-            </button>
-          </div>
-        )}
+          )}
 
-        <div className="manage-section">
-          <h3>Manage Roles</h3>
-          <div className="manage-buttons">
-            <button
-              className="btn-secondary"
-              onClick={() => openManageModal("teachers")}
-            >
-              <FontAwesomeIcon icon={faGraduationCap} /> Teachers
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={() => openManageModal("students")}
-            >
-              <FontAwesomeIcon icon={faUsers} /> Students
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={() => openManageModal("admins")}
-            >
-              <FontAwesomeIcon icon={faUserShield} /> Admins
-            </button>
+          <div className="manage-section">
+            <h3>Manage Roles</h3>
+            <div className="manage-buttons">
+              <button
+                className="btn-secondary"
+                onClick={() => openManageModal("teachers")}
+              >
+                <FontAwesomeIcon icon={faGraduationCap} /> Teachers
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => openManageModal("students")}
+              >
+                <FontAwesomeIcon icon={faUsers} /> Students
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => openManageModal("admins")}
+              >
+                <FontAwesomeIcon icon={faUserShield} /> Admins
+              </button>
+            </div>
           </div>
-        </div>
+        </div>  
       </div>
 
-      {/* Password Modal */}
-      {showPasswordModal && (
-        <div className="modal">
-          <div className="modal-box small">
-            <h3>Reset Password</h3>
-            {step === 1 && (
-              <>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                />
-                <button onClick={handleSendCode} className="btn-primary">
-                  Send Code
-                </button>
-              </>
-            )}
-            {step === 2 && (
-              <>
-                <input
-                  type="number"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="Enter verification code"
-                />
-                <button onClick={handleVerifyCode} className="btn-primary">
-                  Verify Code
-                </button>
-              </>
-            )}
-            {step === 3 && (
-              <>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password"
-                />
-                <button onClick={handleSetNewPassword} className="btn-primary">
-                  Save Password
-                </button>
-              </>
-            )}
-            <button
-              className="btn-cancel"
-              onClick={() => setShowPasswordModal(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
       {showManageModal && (
-        <div className="modal">
           <div className="modal-box large">
             <div className="modal-header">
               <h3>
@@ -310,7 +214,6 @@ export default function Profile() {
               )}
             </div>
           </div>
-        </div>
       )}
 
       <ToastContainer />
