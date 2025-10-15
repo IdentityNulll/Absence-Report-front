@@ -5,12 +5,13 @@ import {
   faSignOutAlt,
   faBars,
   faTimes,
+  faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faUser,
   faCalendar,
   faBell,
-  faHouse
+  faHouse,
 } from "@fortawesome/free-regular-svg-icons";
 import "./Sidebar.css";
 import ThemeSwitcher from "../ThemeSwitcher";
@@ -72,6 +73,10 @@ function Sidebar() {
           <Link to={"/admin/analytics"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faChartLine} className="analytics" />{" "}
             <span>Analytics</span>
+          </Link>
+          <Link to={"/admin/settings"} onClick={closeSidebar}>
+            <FontAwesomeIcon icon={faSun} className="Sun" />{" "}
+            <span>Manage Users</span>
           </Link>
         </nav>
         <hr style={{ opacity: "0.6", margin: "20px" }} />

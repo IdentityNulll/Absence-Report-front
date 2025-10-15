@@ -3,7 +3,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../api/axios";
 import "./ForgotPassword.css";
-import AdminAnimate from "../../components/Animation/AdminAnimate";
 
 export default function ForgotPassword() {
   const [step, setStep] = useState(1);
