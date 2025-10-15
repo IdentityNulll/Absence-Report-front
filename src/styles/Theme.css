@@ -7,6 +7,7 @@
   --card-bg: #ffffff;
   --text-color: #0f172a;
   --border-color: #d1d5db;
+  --hover-color: #0f172aa4;
 
   --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.07);
   --shadow-medium: 0 4px 14px rgba(0, 0, 0, 0.12);
@@ -22,6 +23,7 @@
   --accent-color: #22d3ee;
   --bg-color: #0f172a;
   --card-bg: #1e293b;
+  --hover-color: #eef2f7af;
   --text-color: #f8fafc;
   --border-color: #334155;
   --shadow-light: 0 2px 6px rgba(255, 255, 255, 0.05);

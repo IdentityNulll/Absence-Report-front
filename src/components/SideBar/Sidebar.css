@@ -170,3 +170,6 @@
 .house {
   color: orange;
 }
+.Sun {
+  color: var(--accent-color);
+}

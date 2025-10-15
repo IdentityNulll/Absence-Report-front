@@ -13,17 +13,15 @@ function Notifications() {
     message: "",
   });
 
-  const senderId = localStorage.getItem("userId"); // ✅ your saved user id
+  const senderId = localStorage.getItem("id");
 
-  // ✅ Fetch all notifications
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await api.get("/api/notification/all");
-        setNotifications(res.data || []);
+        const res = await api.get("/notification/all");
+        setNotifications(res.data.data || []);
       } catch (err) {
         console.error("Failed to fetch notifications:", err);
-        // fallback dummy data if API fails
         setNotifications([
           {
             id: 1,
@@ -47,17 +45,15 @@ function Notifications() {
     }
 
     try {
-      const res = await api.post("/api/notification/add", {
+      const res = await api.post("/notification/add", {
         sender: senderId,
-        recipient: [senderId], // can be dynamic later
+        recipient: [senderId],
         title: newNotification.title,
         message: newNotification.message,
       });
 
-      // Add new one on top
-      setNotifications((prev) => [res.data, ...prev]);
+      setNotifications((prev) => [res.data.data, ...prev]);
 
-      // Reset form and close popup
       setNewNotification({ title: "", message: "" });
       setShowPopup(false);
     } catch (err) {
@@ -82,7 +78,7 @@ function Notifications() {
           {/* Notifications List */}
           <div className="notifications-list-card">
             {loading ? (
-              <Loader/>
+              <Loader />
             ) : notifications.length === 0 ? (
               <p className="empty-text">No notifications yet</p>
             ) : (
