@@ -74,7 +74,7 @@ function Sidebar() {
             <FontAwesomeIcon icon={faChartLine} className="analytics" />{" "}
             <span>Analytics</span>
           </Link>
-          <Link to={"/admin/settings"} onClick={closeSidebar}>
+          <Link to={"/admin/manageusers"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faSun} className="Sun" />{" "}
             <span>Manage Users</span>
           </Link>

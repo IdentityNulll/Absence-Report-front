@@ -14,12 +14,14 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import Layout from "./components/Layout.jsx";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 import AdminAnimate from "./components/Animation/AdminAnimate.jsx";
+import ChangePassword from "./components/changePassword/ChangePassword.jsx";
+import ManageUsers from "./Panels/AdminPanel/manangeUsers/ManageUsers.jsx";
 
 function App() {
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <ThemeProvider>
-        <AdminAnimate/>
+        <AdminAnimate />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route element={<Layout />}>
@@ -39,12 +41,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/admin/forgot-password"
-              element={
-                  <ForgotPassword />
-              }
-            />
+            <Route path="/admin/forgot-password" element={<ForgotPassword />} />
             <Route
               path="/admin/profile"
               element={
@@ -66,6 +63,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Analytics />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/changepassword"
+              element={
+                <ProtectedRoute>
+                  <ChangePassword />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/manageusers"
+              element={
+                <ProtectedRoute>
+                  <ManageUsers/>
                 </ProtectedRoute>
               }
             />
