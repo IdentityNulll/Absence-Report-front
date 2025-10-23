@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../../components/SideBar/SibeBar";
 import {
-  faBell,
   faBookmark,
   faClock,
 } from "@fortawesome/free-regular-svg-icons";
 import { faGraduationCap, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Dashboard.css";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../../../api/axios";
 import Header from "../../../components/Header/Header";
 import Loader from "../../../components/loader/Loader";
-import AdminAnimate from "../../../components/Animation/AdminAnimate";
 
 function Dashboard() {
   const { t } = useTranslation();
@@ -28,21 +24,49 @@ function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch dashboard data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [classRes, studentRes] = await Promise.all([
+        const [classRes, studentRes] = await Promise.allSettled([
           api.get("class/all"),
           api.get("student"),
         ]);
 
-        setClasses(classRes.data.data || []);
-        setStudents(studentRes.data.data || []);
-        console.log(classes);
+        // ✅ Dummy fallback data
+        const dummyClasses = [
+          { uuid: "1", name: "9-A", teacher: "Mr. Anderson", studentCount: 25 },
+          { uuid: "2", name: "10-B", teacher: "Ms. Carter", studentCount: 28 },
+          { uuid: "3", name: "11-C", teacher: "Mr. Brown", studentCount: 30 },
+          { uuid: "4", name: "8-D", teacher: "Ms. Lee", studentCount: 22 },
+        ];
 
-        const total = studentRes.data.data?.length || 0;
-        const presentCount = studentRes.data.data?.filter(
+        const dummyStudents = [
+          { name: "Alice", status: "PRESENT" },
+          { name: "Bob", status: "ABSENT" },
+          { name: "Charlie", status: "LATE" },
+          { name: "Diana", status: "PRESENT" },
+          { name: "Ethan", status: "PRESENT" },
+        ];
+
+        const backendClasses =
+          classRes.status === "fulfilled" &&
+          Array.isArray(classRes.value?.data?.data) &&
+          classRes.value.data.data.length > 0
+            ? classRes.value.data.data
+            : dummyClasses;
+
+        const backendStudents =
+          studentRes.status === "fulfilled" &&
+          Array.isArray(studentRes.value?.data?.data) &&
+          studentRes.value.data.data.length > 0
+            ? studentRes.value.data.data
+            : dummyStudents;
+
+        setClasses(backendClasses);
+        setStudents(backendStudents);
+
+        const total = backendStudents.length;
+        const presentCount = backendStudents.filter(
           (s) => s.status === "PRESENT" || s.attendance === "present"
         ).length;
         setAttendanceRate(
@@ -58,132 +82,126 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  const formatTime = (date) => {
-    return date.toLocaleTimeString("en-US", {
+  const formatTime = (date) =>
+    date.toLocaleTimeString("en-US", {
       hour12: false,
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
     });
-  };
 
-  if (loading) {
-    return <Loader />;
-  }
+  if (loading) return <Loader />;
 
   return (
-    <>
-      <div className="body">
-        <Header />
+    <div className="body">
+      <Header />
 
-        {/* Welcome Card */}
-        <div className="welcome-card fade-in-right">
-          <div className="welcome-left">
-            <div className="welcome-icon">
-              <FontAwesomeIcon icon={faGraduationCap} />
-            </div>
-            <div>
-              <h3>Welcome back, Sarah!</h3>
-              <p>Manage your classes and track student progress</p>
-            </div>
-          </div>
-          <div className="welcome-right">
-            <p>Current Time</p>
-            <div className="time">{formatTime(currentTime)}</div>
-          </div>
-        </div>
-
-        {/* Stats Section */}
-        <div className="stats fade-in-left">
-          <div className="stats-box item1">
-            <FontAwesomeIcon icon={faBookmark} />
-            <p className="number">{classes.length}</p>
-            <p className="text">{t("dashboard.stats-classes")}</p>
-          </div>
-          <div className="stats-box item2">
-            <FontAwesomeIcon icon={faUsers} />
-            <p className="number">{students.length}</p>
-            <p className="text">{t("dashboard.stats-students")}</p>
-          </div>
-          <div className="stats-box item3">
-            <FontAwesomeIcon icon={faClock} />
-            <p className="number">—</p>
-            <p className="text">{t("dashboard.stats-hours")}</p>
-          </div>
-          <div className="stats-box item4">
+      {/* Welcome Card */}
+      <div className="welcome-card fade-in-right">
+        <div className="welcome-left">
+          <div className="welcome-icon">
             <FontAwesomeIcon icon={faGraduationCap} />
-            <p className="number">{attendanceRate}%</p>
-            <p className="text">{t("dashboard.stats-rate")}</p>
+          </div>
+          <div>
+            <h3>Welcome back, Sarah!</h3>
+            <p>Manage your classes and track student progress</p>
           </div>
         </div>
+        <div className="welcome-right">
+          <p>Current Time</p>
+          <div className="time">{formatTime(currentTime)}</div>
+        </div>
+      </div>
 
-        {/* Classes + Quick Stats */}
-        <div className="classes-container fade-in-up">
-          {/* My Classes */}
-          <div className="my-classes">
-            <h3>
-              <FontAwesomeIcon icon={faGraduationCap} /> My Classes
-            </h3>
+      {/* Stats Section */}
+      <div className="stats fade-in-left">
+        <div className="stats-box item1">
+          <FontAwesomeIcon icon={faBookmark} />
+          <p className="number">{classes.length}</p>
+          <p className="text">{t("dashboard.stats-classes")}</p>
+        </div>
+        <div className="stats-box item2">
+          <FontAwesomeIcon icon={faUsers} />
+          <p className="number">{students.length}</p>
+          <p className="text">{t("dashboard.stats-students")}</p>
+        </div>
+        <div className="stats-box item3">
+          <FontAwesomeIcon icon={faClock} />
+          <p className="number">—</p>
+          <p className="text">{t("dashboard.stats-hours")}</p>
+        </div>
+        <div className="stats-box item4">
+          <FontAwesomeIcon icon={faGraduationCap} />
+          <p className="number">{attendanceRate}%</p>
+          <p className="text">{t("dashboard.stats-rate")}</p>
+        </div>
+      </div>
 
-            {classes.slice(0, 4).map((cls) => (
-              <div className="class-card purple" key={cls.uuid}>
-                <div className="class-left">
-                  <div className="class-icon">
-                    {cls.name.slice(0, 2).toUpperCase()}
-                  </div>
-                  <div>
-                    <h4>{cls.name}</h4>
-                    <p>Teacher: {cls.teacher}</p>
-                  </div>
+      {/* Classes + Quick Stats */}
+      <div className="classes-container fade-in-up">
+        {/* My Classes */}
+        <div className="my-classes">
+          <h3>
+            <FontAwesomeIcon icon={faGraduationCap} /> My Classes
+          </h3>
+          {classes.slice(0, 4).map((cls) => (
+            <div className="class-card purple" key={cls.uuid}>
+              <div className="class-left">
+                <div className="class-icon">
+                  {cls.name.slice(0, 2).toUpperCase()}
                 </div>
-                <span className="students">{cls.studentCount} students</span>
+                <div>
+                  <h4>{cls.name}</h4>
+                  <p>Teacher: {cls.teacher}</p>
+                </div>
               </div>
-            ))}
-          </div>
+              <span className="students">{cls.studentCount} students</span>
+            </div>
+          ))}
+        </div>
 
-          {/* Quick Stats */}
-          <div className="quick-stats">
-            <h3>Quick Stats</h3>
-            <div className="quick-card present">
-              <p>
-                <span>●</span> Present Today
-              </p>
-              <strong>
-                {
-                  students.filter(
-                    (s) => s.status === "PRESENT" || s.attendance === "present"
-                  ).length
-                }
-              </strong>
-            </div>
-            <div className="quick-card absent">
-              <p>
-                <span>●</span> Absent Today
-              </p>
-              <strong>
-                {
-                  students.filter(
-                    (s) => s.status === "ABSENT" || s.attendance === "absent"
-                  ).length
-                }
-              </strong>
-            </div>
-            <div className="quick-card late">
-              <p>
-                <span>●</span> Late Arrivals
-              </p>
-              <strong>
-                {
-                  students.filter(
-                    (s) => s.status === "LATE" || s.attendance === "late"
-                  ).length
-                }
-              </strong>
-            </div>
+        {/* Quick Stats */}
+        <div className="quick-stats">
+          <h3>Quick Stats</h3>
+          <div className="quick-card present">
+            <p>
+              <span>●</span> Present Today
+            </p>
+            <strong>
+              {
+                students.filter(
+                  (s) => s.status === "PRESENT" || s.attendance === "present"
+                ).length
+              }
+            </strong>
+          </div>
+          <div className="quick-card absent">
+            <p>
+              <span>●</span> Absent Today
+            </p>
+            <strong>
+              {
+                students.filter(
+                  (s) => s.status === "ABSENT" || s.attendance === "absent"
+                ).length
+              }
+            </strong>
+          </div>
+          <div className="quick-card late">
+            <p>
+              <span>●</span> Late Arrivals
+            </p>
+            <strong>
+              {
+                students.filter(
+                  (s) => s.status === "LATE" || s.attendance === "late"
+                ).length
+              }
+            </strong>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

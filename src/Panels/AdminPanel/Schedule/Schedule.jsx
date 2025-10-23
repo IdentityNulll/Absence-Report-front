@@ -9,6 +9,8 @@ export default function Schedule() {
     subject: "",
     room: "",
     period: "",
+    teacher: "",
+    className: "",
   });
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -21,7 +23,6 @@ export default function Schedule() {
     "Period 6",
   ];
 
-  // 🕒 Define period times
   const periodTimes = {
     "Period 1": "09:00 - 10:00",
     "Period 2": "10:10 - 11:10",
@@ -31,39 +32,36 @@ export default function Schedule() {
     "Period 6": "15:20 - 16:20",
   };
 
-  // 🧩 Dummy lessons
+  // 🧩 Example lessons
   const [schedule, setSchedule] = useState({
     Monday: {
-      "Period 1": { subject: "Math", room: "201" },
-      "Period 3": { subject: "Physics", room: "202" },
+      "Period 1": { subject: "Math", room: "201", teacher: "Mr. Adams", className: "9-A" },
+      "Period 3": { subject: "Physics", room: "202", teacher: "Ms. Clark", className: "10-B" },
     },
     Tuesday: {
-      "Period 2": { subject: "English", room: "101" },
-      "Period 5": { subject: "Chemistry", room: "305" },
+      "Period 2": { subject: "English", room: "101", teacher: "Mrs. Miller", className: "8-A" },
+      "Period 5": { subject: "Chemistry", room: "305", teacher: "Dr. Lee", className: "9-B" },
     },
     Wednesday: {},
-    Thursday: { "Period 4": { subject: "Biology", room: "302" } },
+    Thursday: { "Period 4": { subject: "Biology", room: "302", teacher: "Mr. Green", className: "10-A" } },
     Friday: {},
     Saturday: {},
   });
 
   const handleAddLesson = () => {
-    if (!newLesson.subject || !newLesson.room || !newLesson.period)
+    if (!newLesson.subject || !newLesson.room || !newLesson.period || !newLesson.teacher || !newLesson.className)
       return alert("Please fill all fields");
 
     setSchedule((prev) => ({
       ...prev,
       [selectedDay]: {
         ...prev[selectedDay],
-        [newLesson.period]: {
-          subject: newLesson.subject,
-          room: newLesson.room,
-        },
+        [newLesson.period]: { ...newLesson },
       },
     }));
 
     setShowPopup(false);
-    setNewLesson({ subject: "", room: "", period: "" });
+    setNewLesson({ subject: "", room: "", period: "", teacher: "", className: "" });
   };
 
   return (
@@ -71,7 +69,6 @@ export default function Schedule() {
       <Header />
 
       <div className="schedule-grid fade-in-up">
-        {/* HEADER ROW */}
         <div className="grid-header">
           <div className="grid-cell period-title"></div>
           {days.map((day) => (
@@ -92,7 +89,6 @@ export default function Schedule() {
           ))}
         </div>
 
-        {/* MAIN GRID */}
         {periods.map((period) => (
           <div key={period} className="grid-row">
             <div className="grid-cell period-title">
@@ -105,9 +101,11 @@ export default function Schedule() {
               return (
                 <div key={day + period} className="grid-cell lesson-cell">
                   {lesson ? (
-                    <div className="lesson-box">
+                    <div className="lesson-box colorful-box">
                       <h4>{lesson.subject}</h4>
                       <p>Room {lesson.room}</p>
+                      <p>{lesson.teacher}</p>
+                      <span className="class-tag">{lesson.className}</span>
                     </div>
                   ) : (
                     <span className="empty-slot">—</span>
@@ -119,7 +117,6 @@ export default function Schedule() {
         ))}
       </div>
 
-      {/* POPUP */}
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-card large">
@@ -153,6 +150,22 @@ export default function Schedule() {
               value={newLesson.room}
               onChange={(e) =>
                 setNewLesson({ ...newLesson, room: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Teacher"
+              value={newLesson.teacher}
+              onChange={(e) =>
+                setNewLesson({ ...newLesson, teacher: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Class (e.g., 9-A)"
+              value={newLesson.className}
+              onChange={(e) =>
+                setNewLesson({ ...newLesson, className: e.target.value })
               }
             />
 
