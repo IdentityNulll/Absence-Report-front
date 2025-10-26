@@ -120,7 +120,7 @@
   background: var(--hover-color);
 }
 
-.user-list li::after {
+/* .user-list li::after {
   content: "▼";
   position: absolute;
   right: 1.2rem;
@@ -128,7 +128,7 @@
   font-size: 0.9rem;
   color: var(--text-color);
   transition: var(--transition);
-}
+} */
 
 .user-list li.open::after {
   transform: rotate(-180deg);
