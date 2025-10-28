@@ -8,6 +8,7 @@ import {
   faPlus,
   faChevronDown,
   faTimes,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import api from "../../../api/axios";
@@ -19,7 +20,6 @@ export default function ManageUsers() {
   const [list, setList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [classList, setClassList] = useState([]);
-
   const [newUser, setNewUser] = useState({
     firstName: "",
     lastName: "",
@@ -28,44 +28,35 @@ export default function ManageUsers() {
     role: "STUDENT",
     password: "",
     classId: "",
+    name: "",
   });
+
+  // ✅ Modal for showing selected user's details
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showUserModal, setShowUserModal] = useState(false);
+
+  // Fetch list by type
   const fetchList = async (type) => {
     try {
       let res;
       if (type === "teachers") {
         res = await api.get("teachers");
-        const teachers = res.data.data.map((t) => ({
-          firstName: t.firstName,
-          lastName: t.lastName,
-          mail: t.email, // fix
-        }));
-        setList(teachers);
-        return;
-      }
-
-      if (type === "students") {
+        setList(res.data.data || res.data);
+      } else if (type === "students") {
         res = await api.get("student");
         setList(res.data.data || res.data);
-        return;
-      }
-
-      if (type === "admins") {
+      } else if (type === "admins") {
         res = await api.get("admin");
         setList(res.data.data || res.data);
-        return;
-      }
-
-      if (type === "classes") {
+      } else if (type === "classes") {
         res = await api.get("class/all");
         setList(res.data.data || res.data);
-        return;
       }
     } catch {
       toast.error("Failed to fetch users");
     }
   };
 
-  // ✅ Fetch all classes for student dropdown
   const fetchClasses = async () => {
     try {
       const res = await api.get("class/all");
@@ -83,18 +74,17 @@ export default function ManageUsers() {
     if (selectedType === type) {
       setSelectedType(null);
       setList([]);
-      return;
+    } else {
+      setSelectedType(type);
+      fetchList(type);
     }
-    setSelectedType(type);
-    fetchList(type);
   };
 
-  // ✅ Add user function
+  // ✅ Add new user/class
   const handleAddUser = async () => {
-    // check for class creation separately
-    if (selectedType === "classes") {
-      if (!newUser.name) return toast.error("Class name is required");
-      try {
+    try {
+      if (selectedType === "classes") {
+        if (!newUser.name) return toast.error("Class name required");
         await api.post("class/add", { name: newUser.name });
         toast.success("Class added!");
         setNewUser({
@@ -109,40 +99,52 @@ export default function ManageUsers() {
         });
         fetchList("classes");
         setShowModal(false);
-      } catch {
-        toast.error("Failed to add class");
+        return;
       }
-      return;
-    }
 
-    // validate for users
-    if (!newUser.firstName || !newUser.lastName || !newUser.mail)
-      return toast.error("All fields required");
+      if (!newUser.firstName || !newUser.lastName || !newUser.mail)
+        return toast.error("All fields required");
 
-    try {
       if (selectedType === "teachers") await api.post("teachers", newUser);
       if (selectedType === "students") {
-        if (!newUser.classId) return toast.error("Please select a class");
+        if (!newUser.classId) return toast.error("Select class");
         await api.post("student", newUser);
       }
       if (selectedType === "admins") await api.post("admin", newUser);
 
       toast.success("User added!");
-      setNewUser({
-        firstName: "",
-        lastName: "",
-        mail: "",
-        birthday: "",
-        role: "STUDENT",
-        password: "",
-        classId: "",
-        name: "",
-      });
-      fetchList(selectedType);
       setShowModal(false);
+      fetchList(selectedType);
     } catch {
       toast.error("Failed to add user");
     }
+  };
+
+  // ✅ Delete user/class
+  const handleDelete = async (id) => {
+    if (!selectedType) return;
+    let endpoint = "";
+
+    if (selectedType === "teachers") endpoint = `/teachers/${id}`;
+    if (selectedType === "students") endpoint = `/student/${id}`;
+    if (selectedType === "admins") endpoint = `/admin/${id}`;
+    if (selectedType === "classes") endpoint = `/class/${id}`;
+
+    if (!window.confirm("Are you sure you want to delete this item?")) return;
+
+    try {
+      await api.delete(endpoint);
+      toast.success("Deleted successfully!");
+      fetchList(selectedType);
+    } catch {
+      toast.error("Failed to delete");
+    }
+  };
+
+  // ✅ Show user details modal
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
+    setShowUserModal(true);
   };
 
   const userTypes = [
@@ -186,34 +188,30 @@ export default function ManageUsers() {
                     <FontAwesomeIcon icon={faPlus} /> Create
                   </button>
                 </div>
+
                 <div className="user-list">
                   <ul>
                     {list.map((item, i) => (
-                      <li
-                        key={i}
-                        onClick={(e) => {
-                          // Disable "open" toggle for classes
-                          if (selectedType !== "classes") {
-                            e.currentTarget.classList.toggle("open");
-                          }
-                        }}
-                      >
-                        {selectedType === "classes" ? (
-                          <>{item.name}</>
-                        ) : (
-                          <>
-                            {item.firstName} {item.lastName} — {item.mail}
-                            <div className="details">
-                              <p>
-                                <b>Birthday:</b> {item.birthday || "N/A"}
-                              </p>
-                              <p>
-                                <b>Role:</b>{" "}
-                                {item.role || selectedType.slice(0, -1)}
-                              </p>
-                            </div>
-                          </>
-                        )}
+                      <li key={i} className="user-item">
+                        <div
+                          className="user-info"
+                          onClick={() => handleUserClick(item)}
+                        >
+                          {selectedType === "classes" ? (
+                            <>{item.name}</>
+                          ) : (
+                            <>
+                              {item.firstName} {item.lastName} —{" "}
+                              {item.mail || item.email}
+                            </>
+                          )}
+                        </div>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDelete(item.id || item.uuid)}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -223,15 +221,13 @@ export default function ManageUsers() {
           </div>
         ))}
 
+        {/* ✅ Modal for adding new user/class */}
         {showModal && (
           <div className="modal-overlay">
             <div className="modal-content">
               <div className="modal-header">
                 <h3>Add New {selectedType?.slice(0, -1)}</h3>
-                <button
-                  className="close-btn"
-                  onClick={() => setShowModal(false)}
-                >
+                <button className="close-btn" onClick={() => setShowModal(false)}>
                   <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>
@@ -241,14 +237,11 @@ export default function ManageUsers() {
                   <>
                     <input
                       placeholder="Class Name"
-                      value={newUser.name || ""}
+                      value={newUser.name}
                       onChange={(e) =>
                         setNewUser({ ...newUser, name: e.target.value })
                       }
                     />
-                    <button onClick={handleAddUser} className="btn-primary">
-                      <FontAwesomeIcon icon={faPlus} /> Add
-                    </button>
                   </>
                 ) : (
                   <>
@@ -315,9 +308,56 @@ export default function ManageUsers() {
                         setNewUser({ ...newUser, password: e.target.value })
                       }
                     />
-                    <button onClick={handleAddUser} className="btn-primary">
-                      <FontAwesomeIcon icon={faPlus} /> Add
-                    </button>
+                  </>
+                )}
+                <button onClick={handleAddUser} className="btn-primary">
+                  <FontAwesomeIcon icon={faPlus} /> Add
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ✅ Modal for showing user details */}
+        {showUserModal && selectedUser && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h3>User Details</h3>
+                <button
+                  className="close-btn"
+                  onClick={() => setShowUserModal(false)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+
+              <div className="user-details">
+                {selectedType === "classes" ? (
+                  <p>
+                    <b>Class Name:</b> {selectedUser.name}
+                  </p>
+                ) : (
+                  <>
+                    <p>
+                      <b>First Name:</b> {selectedUser.firstName}
+                    </p>
+                    <p>
+                      <b>Last Name:</b> {selectedUser.lastName}
+                    </p>
+                    <p>
+                      <b>Email:</b> {selectedUser.mail || selectedUser.email}
+                    </p>
+                    {selectedUser.birthday && (
+                      <p>
+                        <b>Birthday:</b> {selectedUser.birthday}
+                      </p>
+                    )}
+                    {selectedUser.role && (
+                      <p>
+                        <b>Role:</b> {selectedUser.role}
+                      </p>
+                    )}
                   </>
                 )}
               </div>

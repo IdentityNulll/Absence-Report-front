@@ -232,3 +232,111 @@
     transform: translateY(0);
   }
 }
+
+/* ===== New Styles for Updates ===== */
+
+/* Delete Button */
+.delete-btn {
+  background: #ff4d4d;
+  border: none;
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.delete-btn:hover {
+  background: #ff2e2e;
+  transform: scale(1.05);
+}
+
+/* Place delete button to the right in user list */
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* User Info Hover Effect */
+.user-info {
+  flex-grow: 1;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+
+/* User Details Modal */
+.user-details {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+.user-details p {
+  background: var(--bg-color);
+  border-left: 4px solid var(--main-color);
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  margin: 0;
+  font-size: 1rem;
+  box-shadow: var(--shadow-light);
+}
+
+.user-details b {
+  color: var(--main-color);
+}
+
+/* Make modal content smaller for user detail modal */
+.modal-content {
+  max-width: 500px;
+  max-height: 80vh;
+  border-radius: var(--radius);
+  overflow-y: auto;
+}
+
+.modal-overlay .modal-content {
+  box-shadow: var(--shadow-medium);
+  margin: 0 1rem;
+}
+
+/* Buttons inside modal header */
+.modal-header .close-btn:hover {
+  color: var(--accent-color);
+  transform: rotate(90deg);
+  transition: 0.3s ease;
+}
+
+/* Smooth hover for Create/Add buttons */
+.btn-primary {
+  box-shadow: var(--shadow-light);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Slight scale effect for modal open */
+.modal-overlay {
+  animation: fadeInUp 0.3s ease;
+}
+
+.modal-content {
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
