@@ -15,7 +15,7 @@ export default function Header({ adminData }) {
       <div className="header-right">
         <Link to="/admin/notifications" className="notification">
           <FontAwesomeIcon icon={faBell} />
-          <sup>8</sup>
+          <sup>1</sup>
         </Link>
 
         <Link to="/admin/profile" className="logo-img">

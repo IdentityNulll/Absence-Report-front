@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  faBookmark,
-  faClock,
-} from "@fortawesome/free-regular-svg-icons";
+import { faBookmark, faClock } from "@fortawesome/free-regular-svg-icons";
 import { faGraduationCap, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Dashboard.css";
@@ -10,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import api from "../../../api/axios";
 import Header from "../../../components/Header/Header";
 import Loader from "../../../components/loader/Loader";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const { t } = useTranslation();
@@ -115,32 +113,31 @@ function Dashboard() {
 
       {/* Stats Section */}
       <div className="stats fade-in-left">
-        <div className="stats-box item1">
+        <Link to={"/admin/manageusers"} className="stats-box item1">
           <FontAwesomeIcon icon={faBookmark} />
           <p className="number">{classes.length}</p>
           <p className="text">{t("dashboard.stats-classes")}</p>
-        </div>
-        <div className="stats-box item2">
+        </Link>
+        <Link to={"/admin/manageusers"} className="stats-box item2">
           <FontAwesomeIcon icon={faUsers} />
           <p className="number">{students.length}</p>
           <p className="text">{t("dashboard.stats-students")}</p>
-        </div>
-        <div className="stats-box item3">
+        </Link>
+        <Link to={"/admin/schedule"} className="stats-box item3">
           <FontAwesomeIcon icon={faClock} />
-          <p className="number">—</p>
+          <p className="number">3</p>
           <p className="text">{t("dashboard.stats-hours")}</p>
-        </div>
-        <div className="stats-box item4">
+        </Link>
+        <Link to={"/admin/analytics"} className="stats-box item4">
           <FontAwesomeIcon icon={faGraduationCap} />
           <p className="number">{attendanceRate}%</p>
           <p className="text">{t("dashboard.stats-rate")}</p>
-        </div>
+        </Link>
       </div>
 
-      {/* Classes + Quick Stats */}
       <div className="classes-container fade-in-up">
         {/* My Classes */}
-        <div className="my-classes">
+        <Link to={"/admin/manageusers"}  className="my-classes">
           <h3>
             <FontAwesomeIcon icon={faGraduationCap} /> My Classes
           </h3>
@@ -158,10 +155,10 @@ function Dashboard() {
               <span className="students">{cls.studentCount} students</span>
             </div>
           ))}
-        </div>
+        </Link>
 
         {/* Quick Stats */}
-        <div className="quick-stats">
+        <Link to={"/admin/stats"} className="quick-stats">
           <h3>Quick Stats</h3>
           <div className="quick-card present">
             <p>
@@ -199,7 +196,7 @@ function Dashboard() {
               }
             </strong>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

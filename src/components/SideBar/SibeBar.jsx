@@ -40,7 +40,7 @@ function Sidebar() {
         </button>
       )}
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
-        <div className="logo">
+        <Link to={"/admin/profile"} className="logo">
           <div className="logo-text">
             <div className="logo-img1">S</div>
             <div className="logo-text1">
@@ -51,7 +51,7 @@ function Sidebar() {
           <button className="close-btn" onClick={closeSidebar}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
-        </div>
+        </Link>
         <hr style={{ opacity: "0.6" }} />
 
         <nav className="menu">
