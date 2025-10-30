@@ -16,7 +16,6 @@ import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 import AdminAnimate from "./components/Animation/AdminAnimate.jsx";
 import ChangePassword from "./components/changePassword/ChangePassword.jsx";
 import ManageUsers from "./Panels/AdminPanel/manangeUsers/ManageUsers.jsx";
-import Stats from "./Panels/AdminPanel/stats/Stats.jsx";
 
 function App() {
   return (
@@ -80,14 +79,6 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ManageUsers />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/stats"
-              element={
-                <ProtectedRoute>
-                  <Stats/>
                 </ProtectedRoute>
               }
             />

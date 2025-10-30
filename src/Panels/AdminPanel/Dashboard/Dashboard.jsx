@@ -136,8 +136,7 @@ function Dashboard() {
       </div>
 
       <div className="classes-container fade-in-up">
-        {/* My Classes */}
-        <Link to={"/admin/manageusers"}  className="my-classes">
+        <div  className="my-classes">
           <h3>
             <FontAwesomeIcon icon={faGraduationCap} /> My Classes
           </h3>
@@ -155,10 +154,9 @@ function Dashboard() {
               <span className="students">{cls.studentCount} students</span>
             </div>
           ))}
-        </Link>
+        </div>
 
-        {/* Quick Stats */}
-        <Link to={"/admin/stats"} className="quick-stats">
+        <div className="quick-stats">
           <h3>Quick Stats</h3>
           <div className="quick-card present">
             <p>
@@ -196,7 +194,7 @@ function Dashboard() {
               }
             </strong>
           </div>
-        </Link>
+        </div>
       </div>
     </div>
   );

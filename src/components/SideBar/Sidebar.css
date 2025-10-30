@@ -20,23 +20,57 @@
   color: var(--text-color);
 }
 
+/* Sidebar Toggle */
 .sidebar-toggle {
   position: fixed;
   top: 15px;
-  left: 50%;
-  transform: translateX(-680px);
+  left: 20px;
   color: var(--text-color);
   font-size: 20px;
-  border: 1px solid #ccc;
-  padding: 6px 10px;
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  z-index: 2;
-  background: var(--bg-color);
+  z-index: 1100;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  box-shadow: var(--shadow-light);
+}
+
+.sidebar-toggle:hover {
+  background: var(--hover-color);
+  transform: scale(1.05);
+}
+
+/* Make toggle larger & easier to tap on small screens */
+@media (max-width: 992px) {
+  .sidebar-toggle {
+    top: 12px;
+    left: 12px;
+    /* padding: 10px 14px; */
+    /* font-size: 22px; */
+    border-radius: 10px;
+  }
+}
+
+/* Keep it visible and centered on very small screens */
+@media (max-width: 600px) {
+  .sidebar-toggle {
+    top: 10px;
+    left: 10px;
+    /* padding: 10px 16px; */
+    /* font-size: 24px; */
+  }
+}
+
+/* Hide toggle when sidebar is open on desktop */
+@media (min-width: 993px) {
+  .sidebar.open + .sidebar-toggle {
+    display: none;
+  }
 }
 
 .sidebar-toggle:hover {
