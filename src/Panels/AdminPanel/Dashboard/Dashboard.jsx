@@ -173,28 +173,17 @@ function Dashboard() {
 
         <div className="quick-stats">
           <h3>Quick Stats</h3>
-          <div className="quick-card present">
-            <p>
-              <span>●</span> Present Today
-            </p>
-            <strong>
-              {
-                students.filter(
-                  (s) => s.status === "PRESENT" || s.attendance === "present"
-                ).length
-              }
-            </strong>
-          </div>
           <div className="quick-card absent">
             <p>
               <span>●</span> Absent Today
             </p>
             <strong>
-              {
+              {/* {
                 students.filter(
                   (s) => s.status === "ABSENT" || s.attendance === "absent"
                 ).length
-              }
+              } */}
+              2
             </strong>
           </div>
           <div className="quick-card late">
@@ -202,11 +191,12 @@ function Dashboard() {
               <span>●</span> Late Arrivals
             </p>
             <strong>
-              {
+              {/* {
                 students.filter(
                   (s) => s.status === "LATE" || s.attendance === "late"
                 ).length
-              }
+              } */}
+              2
             </strong>
           </div>
         </div>
