@@ -79,10 +79,6 @@ function Sidebar() {
             <FontAwesomeIcon icon={faSun} className="Sun" />{" "}
             <span>Manage Users</span>
           </Link>
-          <Link to={"/admin/stats"} onClick={closeSidebar}>
-            <FontAwesomeIcon icon={faSignal} className="signal" />{" "}
-            <span>Stats For Today</span>
-          </Link>
         </nav>
         <hr style={{ opacity: "0.6", margin: "20px" }} />
 

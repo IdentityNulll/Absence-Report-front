@@ -16,6 +16,7 @@ import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 import AdminAnimate from "./components/Animation/AdminAnimate.jsx";
 import ChangePassword from "./components/changePassword/ChangePassword.jsx";
 import ManageUsers from "./Panels/AdminPanel/manangeUsers/ManageUsers.jsx";
+import OneClass from "./Panels/AdminPanel/oneClass/OneClass.jsx";
 
 function App() {
   return (
@@ -79,6 +80,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ManageUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/class/:className"
+              element={
+                <ProtectedRoute>
+                  <OneClass />
                 </ProtectedRoute>
               }
             />

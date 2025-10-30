@@ -1,21 +1,56 @@
-.profile-container {
+.profile-wrapper {
   width: 100%;
-  max-width: 900px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-medium);
-  border-radius: var(--radius);
-  padding: 40px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 40px;
+  /* background: var(--bg-color); */
+  color: var(--text-color);
 }
 
+/* Centers content both vertically and horizontally */
 .profile {
+  flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 40px 20px;
 }
+
+/* Makes the profile box stretch nicely while staying elegant */
+.profile-container {
+  width: 100%;
+  max-width: 1400px;
+  /* background: var(--card-bg); */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  padding: 60px 40px;
+  display: flex;
+  height: 500px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+/* Responsive tweaks for smaller devices */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 30px 20px;
+    max-width: 95%;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+
+  .btn-primary {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+}
+
 
 .profile-content {
   display: flex;

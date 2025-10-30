@@ -26,52 +26,63 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const [classRes, studentRes] = await Promise.allSettled([
-          api.get("class/all"),
+          api.get("/class/all"),
           api.get("student"),
         ]);
 
-        // ✅ Dummy fallback data
-        const dummyClasses = [
-          { uuid: "1", name: "9-A", teacher: "Mr. Anderson", studentCount: 25 },
-          { uuid: "2", name: "10-B", teacher: "Ms. Carter", studentCount: 28 },
-          { uuid: "3", name: "11-C", teacher: "Mr. Brown", studentCount: 30 },
-          { uuid: "4", name: "8-D", teacher: "Ms. Lee", studentCount: 22 },
-        ];
-
-        const dummyStudents = [
-          { name: "Alice", status: "PRESENT" },
-          { name: "Bob", status: "ABSENT" },
-          { name: "Charlie", status: "LATE" },
-          { name: "Diana", status: "PRESENT" },
-          { name: "Ethan", status: "PRESENT" },
-        ];
-
-        const backendClasses =
+        // ✅ Classes
+        if (
           classRes.status === "fulfilled" &&
-          Array.isArray(classRes.value?.data?.data) &&
-          classRes.value.data.data.length > 0
-            ? classRes.value.data.data
-            : dummyClasses;
+          Array.isArray(classRes.value?.data)
+        ) {
+          const data = classRes.value.data;
+          if (data.length === 0) {
+            console.warn("⚠️ No class data returned from API.");
+          }
+          setClasses(
+            data.map((cls) => ({
+              uuid: cls.uuid || Math.random().toString(),
+              name: cls.name || "Unknown",
+            }))
+          );
+        } else {
+          console.error("❌ Failed to fetch classes:", classRes.reason);
+        }
 
-        const backendStudents =
+        // ✅ Students
+        if (
           studentRes.status === "fulfilled" &&
-          Array.isArray(studentRes.value?.data?.data) &&
-          studentRes.value.data.data.length > 0
-            ? studentRes.value.data.data
-            : dummyStudents;
+          Array.isArray(studentRes.value?.data?.data)
+        ) {
+          const data = studentRes.value.data.data;
+          if (data.length === 0) {
+            console.warn("⚠️ No student data returned from API.");
+          }
+          setStudents(data);
+        } else {
+          console.error("❌ Failed to fetch students:", studentRes.reason);
+        }
 
-        setClasses(backendClasses);
-        setStudents(backendStudents);
-
-        const total = backendStudents.length;
-        const presentCount = backendStudents.filter(
-          (s) => s.status === "PRESENT" || s.attendance === "present"
-        ).length;
+        // ✅ Attendance Rate
+        const total =
+          studentRes.status === "fulfilled" &&
+          studentRes.value?.data?.data?.length
+            ? studentRes.value.data.data.length
+            : 0;
+        const presentCount =
+          total > 0
+            ? studentRes.value.data.data.filter(
+                (s) => s.status === "PRESENT" || s.attendance === "present"
+              ).length
+            : 0;
         setAttendanceRate(
           total > 0 ? ((presentCount / total) * 100).toFixed(1) : 0
         );
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        console.error(
+          "🚨 Unexpected error while fetching dashboard data:",
+          error
+        );
       } finally {
         setLoading(false);
       }
@@ -136,23 +147,27 @@ function Dashboard() {
       </div>
 
       <div className="classes-container fade-in-up">
-        <div  className="my-classes">
+        <div className="my-classes">
           <h3>
             <FontAwesomeIcon icon={faGraduationCap} /> My Classes
           </h3>
           {classes.slice(0, 4).map((cls) => (
-            <div className="class-card purple" key={cls.uuid}>
+            <Link
+              to={`/admin/class/${encodeURIComponent(cls.name)}`}
+              key={cls.uuid}
+              className="class-card purple"
+            >
               <div className="class-left">
                 <div className="class-icon">
                   {cls.name.slice(0, 2).toUpperCase()}
                 </div>
                 <div>
                   <h4>{cls.name}</h4>
-                  <p>Teacher: {cls.teacher}</p>
+                  <p>Teacher: Unknown</p>
                 </div>
               </div>
-              <span className="students">{cls.studentCount} students</span>
-            </div>
+              <span className="students">0 students</span>
+            </Link>
           ))}
         </div>
 

@@ -1,0 +1,97 @@
+.oneclass-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  transition: var(--transition);
+}
+
+.oneclass-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  color: var(--main-color);
+  font-weight: 600;
+}
+
+/* Table styling */
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-light);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.students-table th,
+.students-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.students-table th {
+  background: var(--main-color);
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.students-table tr:hover {
+  background-color: var(--hover-color);
+}
+
+/* Status text styles */
+.students-table td {
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.students-table td:nth-child(3) {
+  font-weight: bold;
+}
+
+.students-table td:nth-child(4) {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+/* Empty message */
+.oneclass-container p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--hover-color);
+}
+
+/* Fade-in animation */
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .students-table th,
+  .students-table td {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .oneclass-container {
+    padding: 20px;
+  }
+}

@@ -1,19 +1,26 @@
 .schedule-page {
   width: 100%;
-  max-width: 1500px;
-  margin: 0 auto;
+  height: 100vh;
+  margin: 0;
   color: var(--text-color);
-  padding: 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ===== GRID ===== */
 .schedule-grid {
+  flex: 1;
+  width: 97%;
+  margin: 0 auto;
   overflow-x: auto;
   background: var(--card-bg);
-  border-radius: var(--radius);
+  border-radius: 10px;
   box-shadow: var(--shadow-medium);
-  margin-top: 2rem;
-  border: 1px solid var(--border-color);
+  margin-top: 0;
+  border-top: 1px solid var(--border-color);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
 }
 
 .grid-header,
@@ -25,7 +32,12 @@
 }
 
 .grid-header {
-  background: linear-gradient(90deg, var(--main-color), var(--accent-color), var(--secondary-color));
+  background: linear-gradient(
+    90deg,
+    var(--main-color),
+    var(--accent-color),
+    var(--secondary-color)
+  );
   color: #fff;
   text-align: center;
   font-size: 1.1rem;
@@ -36,7 +48,7 @@
 }
 
 .grid-day-header {
-  padding: 1.0rem;
+  padding: 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -95,7 +107,11 @@
 }
 
 .lesson-box {
-  background: linear-gradient(135deg, var(--main-color) 30%, var(--accent-color) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--main-color) 30%,
+    var(--accent-color) 100%
+  );
   color: #fff;
   border-radius: 14px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);

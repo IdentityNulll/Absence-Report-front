@@ -1,5 +1,6 @@
 .analytics-container {
-  max-width: 1400px;
+  /* max-width: 100%; */
+  width: 97%;
   margin: 30px auto;
   padding: 30px;
   display: flex;
@@ -23,7 +24,7 @@
 }
 
 .chart-box {
-  width: 100%;
+  width: 100% !important;
   height: 450px;
   background: var(--bg-color);
   border-radius: var(--radius);
