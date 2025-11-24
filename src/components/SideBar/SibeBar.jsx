@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartLine,
@@ -17,9 +17,12 @@ import {
 import "./Sidebar.css";
 import ThemeSwitcher from "../ThemeSwitcher";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../../api/axios";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [studentId, setStudentId] = useState("");
+  const [student, setStudent] = useState(null)
   const navigate = useNavigate();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -32,6 +35,25 @@ function Sidebar() {
     navigate("/");
   };
 
+  useEffect(() => {
+    const fetchAdmin = async () => {
+      const id = localStorage.getItem("id");
+
+      if (!id) return console.log("no Id");
+
+      setStudentId(id);
+
+      try {
+        const response = await api.get(`/admin/${id}`);
+        setStudent(response.data?.data);
+      } catch (err) {
+        console.error("Failed to fetch student info:", err);
+      }
+    };
+
+    fetchAdmin()
+  }, []);
+
   return (
     <>
       {!isOpen && (
@@ -42,10 +64,11 @@ function Sidebar() {
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="logo">
           <div className="logo-text">
-            <Link to={"/admin/profile"} className="logo-img1">S</Link>
+            <Link to={"/admin/profile"} className="logo-img1">
+              S
+            </Link>
             <div className="logo-text1">
-              <h4>Sarah Mitchell</h4>
-              <p>Role</p>
+              {student ? `${student.firstName} ${student.lastName}` : `Loading ...`}
             </div>
           </div>
           <button className="close-btn" onClick={closeSidebar}>
