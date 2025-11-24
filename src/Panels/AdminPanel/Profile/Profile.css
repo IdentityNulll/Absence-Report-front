@@ -1,348 +1,154 @@
+/* PROFILE WRAPPER — only background */
 .profile-wrapper {
-  width: 100%;
+  background: linear-gradient(135deg, var(--card-bg), var(--bg-color));
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  /* background: var(--bg-color); */
-  color: var(--text-color);
-}
-
-/* Centers content both vertically and horizontally */
-.profile {
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 40px 20px;
-}
-
-/* Makes the profile box stretch nicely while staying elegant */
-.profile-container {
   width: 100%;
-  max-width: 1400px;
-  /* background: var(--card-bg); */
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-medium);
-  padding: 60px 40px;
+}
+
+/* PROFILE CARD CENTERED */
+.profile {
+  width: 100%;
   display: flex;
-  height: 500px;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: 0.3s ease;
+  justify-content: center;
+  padding: 60px 20px;
 }
 
-/* Responsive tweaks for smaller devices */
-@media (max-width: 768px) {
-  .profile-container {
-    padding: 30px 20px;
-    max-width: 95%;
-  }
-
-  .profile-avatar {
-    width: 80px;
-    height: 80px;
-    font-size: 32px;
-  }
-
-  .btn-primary {
-    padding: 10px 18px;
-    font-size: 14px;
-  }
-}
-
-
+/* MAIN PROFILE CONTAINER */
 .profile-content {
+  width: 100vw !important;
+  /* max-width: 850px; */
+  background: var(--card-bg);
+  border-radius: 25px;
+  padding: 50px 40px;
   display: flex;
+  gap: 30px;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  text-align: center;
 }
 
+
+/* AVATAR */
 .profile-avatar-container {
   position: relative;
-  display: inline-block;
 }
 
 .profile-avatar {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid var(--primary-color);
+  border: 5px solid white;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  position: relative;
+  background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
 }
 
 .default-avatar {
-  font-size: 60px;
-  color: var(--subtext-color);
-}
-
-.avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  font-size: 75px;
+  color: var(--text-color);
 }
 
 .camera-icon {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
-  background: var(--primary-color);
+  bottom: 0;
+  right: 0;
+  background: var(--main-color);
   color: #fff;
+  padding: 8px;
   border-radius: 50%;
-  padding: 6px;
-  font-size: 12px;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-.profile-avatar {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--main-color),
-    var(--secondary-color)
-  );
-  color: #fff;
-  font-size: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-medium);
-  margin-bottom: 10px;
-}
-
-.profile-role {
-  color: var(--accent-color);
-  font-weight: 600;
-}
-
-.profile-email {
+/* PROFILE NAME */
+.profile-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 15px;
   color: var(--text-color);
-  opacity: 0.8;
 }
 
-.manage-section {
+/* INFO BOXES — big and bold */
+.profile-info-box {
   width: 100%;
-  text-align: center;
-}
-
-.manage-section h3 {
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-}
-
-.manage-buttons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--main-color),
-    var(--secondary-color)
-  );
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  padding: 12px 24px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-.btn-secondary {
+  background: var(--bg-color);
   border: 2px solid var(--main-color);
-  background: transparent;
-  color: var(--text-color);
-  padding: 10px 20px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.btn-secondary:hover {
-  background: var(--main-color);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.btn-cancel {
-  background: transparent;
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  padding: 10px 18px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.btn-cancel:hover {
-  background: var(--border-color);
-}
-
-/* Main modal box */
-.modal-box.large {
-  z-index: 4;
-  animation: fadeBackdrop 0.25s ease-in-out;
-  background: var(--card-bg);
-  border-radius: 3px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-  width: 100% !important;
-  height: 100vh !important;
-  padding: 40px;
-  position: absolute;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  animation: scaleIn 0.3s ease forwards;
-}
-
-/* Modal header */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.modal-header h3 {
-  font-size: 1.5rem;
+  border-radius: 15px;
+  padding: 16px 22px;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--text-color);
-}
-
-.close-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-color);
-  font-size: 1.3rem;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-.close-btn:hover {
-  color: var(--main-color);
-  transform: rotate(90deg);
-}
-
-/* Form area */
-.add-user-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-}
-
-.add-user-form input,
-.add-user-form select {
-  flex: 1 1 220px;
-  padding: 12px 14px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--bg-color);
-  color: var(--text-color);
-  transition: 0.3s;
-}
-
-.add-user-form input:focus,
-.add-user-form select:focus {
-  border-color: var(--main-color);
-  box-shadow: 0 0 6px var(--main-color);
-}
-
-/* Add button styling */
-.add-user-form .btn-primary {
-  flex: 1 1 180px;
-  padding: 12px 18px;
-  background: linear-gradient(
-    135deg,
-    var(--main-color),
-    var(--secondary-color)
-  );
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: transform 0.2s ease;
-}
-.add-user-form .btn-primary:hover {
-  transform: translateY(-3px);
-}
-
-/* User list section */
-.user-list {
-  background: var(--bg-color);
-  border-radius: 10px;
-  padding: 20px;
-  max-height: 350px;
-  overflow-y: auto;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.user-list ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.user-list li {
-  padding: 12px 18px;
-  background: var(--card-bg);
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: var(--shadow-light);
-  transition: 0.25s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
 }
 
-.user-list li:hover {
+.profile-info-box:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
-  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
-/* Scrollbar style */
-.user-list::-webkit-scrollbar {
-  width: 8px;
-}
-.user-list::-webkit-scrollbar-thumb {
-  background: var(--main-color);
-  border-radius: 10px;
+.profile-info-box span.label {
+  color: var(--accent-color);
+  font-weight: 700;
 }
 
-/* Animations */
-@keyframes fadeBackdrop {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* BUTTONS */
+.btn-primary {
+  background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@keyframes scaleIn {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 40px 20px;
   }
-  to {
-    transform: scale(1);
-    opacity: 1;
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .default-avatar {
+    font-size: 60px;
+  }
+
+  .profile-content h2 {
+    font-size: 1.6rem;
+  }
+
+  .profile-info-box {
+    font-size: 1.05rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    padding: 12px 20px;
+    font-size: 1rem;
   }
 }
