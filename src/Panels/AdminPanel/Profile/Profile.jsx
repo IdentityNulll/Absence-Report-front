@@ -18,7 +18,6 @@ export default function Profile() {
   const [profileImg, setProfileImg] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  // Fetch admin info + photo
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
@@ -26,18 +25,22 @@ export default function Profile() {
         const token = localStorage.getItem("token");
 
         const res = await api.get(`/admin/${id}`);
-
         let admin = Array.isArray(res.data.data)
           ? res.data.data[0]
           : res.data.data;
 
-        // const photoRes = await api.get(`/user-photo/by-userId/${id}`, {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
+        if (admin.photoUrl) {
+          // Fetch image with token
+          const imageRes = await api.get(admin.photoUrl, {
+            responseType: "blob",
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
-        // admin.photoUrl = photoRes.data?.data?.photoUrl;
+          // Convert blob to object URL
+          admin.photoUrl = URL.createObjectURL(imageRes.data);
+        } else {
+          admin.photoUrl = null;
+        }
 
         setAdminData(admin);
       } catch (err) {
@@ -47,53 +50,61 @@ export default function Profile() {
         setLoading(false);
       }
     };
+
     fetchAdmin();
   }, []);
 
-  // const uploadPhoto = async () => {
-  //   if (!profileImg) return toast.error("Please select a photo");
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  //   const id = localStorage.getItem("id");
-  //   const formData = new FormData();
-  //   formData.append("file", profileImg);
+    setProfileImg(file);
 
-  //   try {
-  //     // Upload image
-  //     await api.post(`/user-photo/${id}`, formData, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
+    const reader = new FileReader();
+    reader.onload = () => setPreview(reader.result);
+    reader.readAsDataURL(file);
+  };
+  const uploadPhoto = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("id");
+      const formData = new FormData();
+      formData.append("file", profileImg);
 
-  //     toast.success("Photo updated!");
+      let res;
+      if (adminData?.photoUrl == null) {
+        // No photo yet → POST
+        res = await api.post(`/user-photo/${userId}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      } else {
+        // Photo exists → PUT
+        res = await api.put(`/user-photo/${userId}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
 
-  //     // Fetch new image after upload
-  //     const newPhoto = await api.get(`/user-photo/by-userId/${id}`);
+      console.log("Uploaded:", res.data);
 
-  //     setAdminData((prev) => ({
-  //       ...prev,
-  //       photoUrl: newPhoto.data.data?.photoUrl,
-  //     }));
-
-  //     setPreview(null);
-  //     setProfileImg(null);
-  //   } catch (err) {
-  //     toast.error("Failed to upload image");
-  //   }
-  // };
-
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-
-  //   setProfileImg(file);
-
-  //   const reader = new FileReader();
-  //   reader.onload = () => setPreview(reader.result);
-  //   reader.readAsDataURL(file);
-  // };
-
-  const openManageModal = (type) => {
-    setManageType(type);
-    setShowManageModal(true);
+      // Update preview & adminData with new image
+      const imageRes = await api.get(`/user-photo/${userId}`, {
+        responseType: "blob",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const imageURL = URL.createObjectURL(imageRes.data);
+      setAdminData((prev) => ({ ...prev, photoUrl: imageURL }));
+      setPreview(null); // reset preview
+      toast.success("Photo updated!");
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast.error("Failed to upload photo");
+    }
   };
 
   return (
@@ -105,10 +116,11 @@ export default function Profile() {
             <Loader />
           ) : (
             <div className="profile-content">
+              {/* PROFILE PHOTO UPLOAD */}
               <div className="profile-avatar-container">
                 <label htmlFor="profile-upload" className="profile-avatar">
                   {preview ? (
-                    <img src={preview} alt="profile" className="avatar-img" />
+                    <img src={preview} alt="preview" className="avatar-img" />
                   ) : adminData?.photoUrl ? (
                     <img
                       src={adminData.photoUrl}
@@ -116,7 +128,7 @@ export default function Profile() {
                       className="avatar-img"
                     />
                   ) : (
-                    <FontAwesomeIcon icon={faUser} className="default-avatar" />
+                    <FontAwesomeIcon icon={faUser} className="default" />
                   )}
 
                   <div className="camera-icon">
@@ -129,17 +141,17 @@ export default function Profile() {
                   type="file"
                   accept="image/*"
                   style={{ display: "none" }}
-                  // onChange={handleImageChange}
+                  onChange={handleImageChange}
                 />
               </div>
 
-              {/* Upload button only if image selected */}
               {profileImg && (
                 <button onClick={uploadPhoto} className="btn-primary mt-2">
                   Upload Photo
                 </button>
               )}
 
+              {/* USER INFO */}
               <h2>
                 {adminData?.firstName} {adminData?.lastName}
               </h2>
