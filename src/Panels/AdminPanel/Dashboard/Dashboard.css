@@ -32,6 +32,10 @@ a {
   overflow-x: hidden;
 }
 
+.welcome-back {
+  text-transform: capitalize;
+}
+
 /* ============ HEADER LOGO ============ */
 .logo-img1 {
   width: 40px;

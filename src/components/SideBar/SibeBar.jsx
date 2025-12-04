@@ -22,8 +22,9 @@ import api from "../../api/axios";
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [studentId, setStudentId] = useState("");
-  const [student, setStudent] = useState(null)
+  const [student, setStudent] = useState(null);
   const navigate = useNavigate();
+  const [profileUrl, setProfileUrl] = useState(null);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
@@ -37,21 +38,32 @@ function Sidebar() {
 
   useEffect(() => {
     const fetchAdmin = async () => {
-      const id = localStorage.getItem("id");
-
-      if (!id) return console.log("no Id");
-
-      setStudentId(id);
-
       try {
+        const token = localStorage.getItem("token");
+        const id = localStorage.getItem("id")
         const response = await api.get(`/admin/${id}`);
-        setStudent(response.data?.data);
+        const admin = response.data?.data;
+
+        // Handle photo
+        if (admin.photoUrl) {
+          const imageRes = await api.get(admin.photoUrl, {
+            responseType: "blob",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const imageURL = URL.createObjectURL(imageRes.data);
+          setProfileUrl(imageURL);
+        } else {
+          setProfileUrl(null);
+        }
+
+        setStudent(admin);
       } catch (err) {
-        console.error("Failed to fetch student info:", err);
+        console.error("Failed to fetch admin info:", err);
       }
     };
 
-    fetchAdmin()
+    fetchAdmin();
   }, []);
 
   return (
@@ -65,10 +77,21 @@ function Sidebar() {
         <div className="logo">
           <div className="logo-text">
             <Link to={"/admin/profile"} className="logo-img1">
-              S
+              {profileUrl ? (
+                <img
+                  src={profileUrl}
+                  alt="profile"
+                  className="sidebar-avatar"
+                  width={"100%"}
+                  style={{borderRadius:"50%"}}
+                />
+              ) : (
+                student?.firstName?.charAt(0) || "?"
+              )}
             </Link>
+
             <div className="logo-text1">
-              {student ? `${student.firstName} ${student.lastName}` : `Loading ...`}
+              {student ? `${student.firstName}` : `Loading ...`}
             </div>
           </div>
           <button className="close-btn" onClick={closeSidebar}>

@@ -16,6 +16,7 @@ function Dashboard() {
   const [students, setStudents] = useState([]);
   const [attendanceRate, setAttendanceRate] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [admin, setAdmin] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -29,6 +30,15 @@ function Dashboard() {
           api.get("/class/all"),
           api.get("student"),
         ]);
+
+        const id = localStorage.getItem("id");
+
+        try {
+          const adminRes = await api.get(`/admin/${id}`);
+          setAdmin(adminRes.data?.data);
+        } catch (err) {
+          console.error("Failed to fetch admin:", err);
+        }
 
         // ✅ Classes
         if (
@@ -111,8 +121,8 @@ function Dashboard() {
           <div className="welcome-icon">
             <FontAwesomeIcon icon={faGraduationCap} />
           </div>
-          <div>
-            <h3>Welcome back, Sarah!</h3>
+          <div className="welcome-back">
+            <h3>Welcome back, {admin?.firstName || "Guest"}</h3>
             <p>Manage your classes and track student progress</p>
           </div>
         </div>
