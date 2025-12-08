@@ -30,8 +30,7 @@ function Sidebar() {
   const closeSidebar = () => setIsOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
+    localStorage.clear();
     closeSidebar();
     navigate("/");
   };
@@ -40,7 +39,7 @@ function Sidebar() {
     const fetchAdmin = async () => {
       try {
         const token = localStorage.getItem("token");
-        const id = localStorage.getItem("id")
+        const id = localStorage.getItem("id");
         const response = await api.get(`/admin/${id}`);
         const admin = response.data?.data;
 
@@ -83,7 +82,7 @@ function Sidebar() {
                   alt="profile"
                   className="sidebar-avatar"
                   width={"100%"}
-                  style={{borderRadius:"50%"}}
+                  style={{ borderRadius: "50%" }}
                 />
               ) : (
                 student?.firstName?.charAt(0) || "?"
