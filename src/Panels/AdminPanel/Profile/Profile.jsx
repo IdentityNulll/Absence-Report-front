@@ -69,6 +69,7 @@ export default function Profile() {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("id");
       const formData = new FormData();
+      
       formData.append("file", profileImg);
 
       let res;
