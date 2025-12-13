@@ -3,8 +3,23 @@ import "./Schedule.css";
 import Header from "../../../components/Header/Header";
 import api from "../../../api/axios";
 
-const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const periods = ["Period 1","Period 2","Period 3","Period 4","Period 5","Period 6"];
+const days = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+const periods = [
+  "Period 1",
+  "Period 2",
+  "Period 3",
+  "Period 4",
+  "Period 5",
+  "Period 6",
+];
 
 const DAY_ENUM = {
   Monday: "MONDAY",
@@ -26,86 +41,139 @@ const PERIOD_ENUM = {
 
 export default function Schedule() {
   const [schedule, setSchedule] = useState({});
+  const [teachers, setTeachers] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
-  // form state
   const [form, setForm] = useState({
     name: "",
     day: "Monday",
     period: "Period 1",
     teacherId: "",
+    classId: "",
   });
-
-  // dummy teachers (enum)
-  const teachers = [
-    { id: "111", name: "Mr. Adams" },
-    { id: "222", name: "Ms. Clark" },
-    { id: "333", name: "Dr. Lee" },
-  ];
 
   const selectedDay = days[selectedDayIndex];
 
-  // 🔥 FETCH LESSONS
+  // ================= FETCH DATA =================
   useEffect(() => {
     fetchLessons();
+    fetchTeachers();
+    fetchClasses();
+
+    console.log(classes)
+    console.log(teachers)
   }, []);
 
+  // 🔥 FETCH TEACHERS
+  const fetchTeachers = async () => {
+    try {
+      const res = await api.get("/teachers");
+      setTeachers(Array.isArray(res.data.data) ? res.data.data : []);
+    } catch (err) {
+      console.error("Failed to fetch teachers", err);
+    }
+  };
+
+  // 🔥 FETCH CLASSES
+  const fetchClasses = async () => {
+    try {
+      const res = await api.get("/class/all");
+      setClasses(Array.isArray(res.data.data) ? res.data.data : []);
+    } catch (err) {
+      console.error("Failed to fetch classes", err);
+    }
+  };
+
+  // 🔥 FETCH LESSONS
   const fetchLessons = async () => {
-    const res = await api.get("/api/lessons");
-    const lessons = res.data.data;
+    try {
+      const res = await api.get("/lessons");
+      const lessons = res.data.data;
 
-    const normalized = {};
+      console.log(lessons);
+      const normalized = {};
 
-    lessons.forEach((l) => {
-      const day = Object.keys(DAY_ENUM).find(
-        (k) => DAY_ENUM[k] === l.dayOfWeek
-      );
+      lessons.forEach((l) => {
+        const day = Object.keys(DAY_ENUM).find(
+          (k) => DAY_ENUM[k] === l.dayOfWeek
+        );
 
-      const period = Object.keys(PERIOD_ENUM).find(
-        (k) => PERIOD_ENUM[k] === l.period
-      );
+        const period = Object.keys(PERIOD_ENUM).find(
+          (k) => PERIOD_ENUM[k] === l.period
+        );
 
-      if (!normalized[day]) normalized[day] = {};
+        if (!day || !period) return;
 
-      normalized[day][period] = {
-        id: l.id,
-        subject: l.name,
-        teacher: `${l.teacherResponseDto.firstName} ${l.teacherResponseDto.lastName}`,
-        className: l.classResponseDto.name,
-      };
-    });
+        if (!normalized[day]) normalized[day] = {};
 
-    setSchedule(normalized);
+        normalized[day][period] = {
+          id: l.id,
+          subject: l.name,
+          teacher: `${l.teacherResponseDto.firstName} ${l.teacherResponseDto.lastName}`,
+          className: l.classResponseDto.name,
+        };
+      });
+
+      setSchedule(normalized);
+    } catch (err) {
+      console.error("Failed to fetch lessons", err);
+    }
   };
 
-  // 🔥 CREATE LESSON
+  // ================= ACTIONS =================
   const createLesson = async () => {
-    await api.post("/api/lessons", {
-      name: form.name,
-      teacherId: form.teacherId,
-      dayOfWeek: DAY_ENUM[form.day],
-      period: PERIOD_ENUM[form.period],
-    });
+    try {
+      await api.post("/lessons", {
+        name: form.name,
+        teacherId: form.teacherId,
+        classId: form.classId,
+        dayOfWeek: DAY_ENUM[form.day],
+        period: PERIOD_ENUM[form.period],
+      });
 
-    setShowModal(false);
-    fetchLessons();
+      setShowModal(false);
+      setForm({
+        name: "",
+        day: "Monday",
+        period: "Period 1",
+        teacherId: "",
+        classId: "",
+      });
+
+      fetchLessons();
+    } catch (err) {
+      console.error("Create lesson failed", err);
+    }
   };
 
-  // 🔥 DELETE LESSON
   const deleteLesson = async (id) => {
-    await api.delete(`/api/lessons/${id}`);
-    fetchLessons();
+    try {
+      await api.delete(`/lessons/${id}`);
+      fetchLessons();
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
   };
 
+  // ================= UI =================
   return (
     <div className="schedule-page">
       <Header />
 
       <div className="day-selector">
-        <button onClick={() => setSelectedDayIndex((p) => (p === 0 ? 5 : p - 1))}>◀</button>
+        <button
+          onClick={() => setSelectedDayIndex((p) => (p === 0 ? 5 : p - 1))}
+        >
+          ◀
+        </button>
         <h2>{selectedDay}</h2>
-        <button onClick={() => setSelectedDayIndex((p) => (p === 5 ? 0 : p + 1))}>▶</button>
+        <button
+          onClick={() => setSelectedDayIndex((p) => (p === 5 ? 0 : p + 1))}
+        >
+          ▶
+        </button>
       </div>
 
       <button className="create-btn" onClick={() => setShowModal(true)}>
@@ -135,7 +203,7 @@ export default function Schedule() {
         })}
       </div>
 
-      {/* 🔥 MODAL */}
+      {/* ================= MODAL ================= */}
       {showModal && (
         <div className="modal-backdrop">
           <div className="modal">
@@ -151,28 +219,57 @@ export default function Schedule() {
               value={form.day}
               onChange={(e) => setForm({ ...form, day: e.target.value })}
             >
-              {days.map((d) => <option key={d}>{d}</option>)}
+              {days.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
             </select>
 
             <select
               value={form.period}
               onChange={(e) => setForm({ ...form, period: e.target.value })}
             >
-              {periods.map((p) => <option key={p}>{p}</option>)}
+              {periods.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
             </select>
 
+            {/* 🔥 TEACHER */}
             <select
               value={form.teacherId}
               onChange={(e) => setForm({ ...form, teacherId: e.target.value })}
             >
               <option value="">Select Teacher</option>
               {teachers.map((t) => (
-                <option key={t.id} value={t.id}>{t.name}</option>
+                <option key={t.id} value={t.id}>
+                  {t.firstName} {t.lastName}
+                </option>
+              ))}
+            </select>
+
+            {/* 🔥 CLASS */}
+            <select
+              value={form.classId}
+              onChange={(e) => setForm({ ...form, classId: e.target.value })}
+            >
+              <option value="">Select Class</option>
+              {classes.map((c) => (
+                <option key={c.uuid} value={c.uuid}>
+                  {c.name}
+                </option>
               ))}
             </select>
 
             <div className="modal-actions">
-              <button onClick={createLesson}>Save</button>
+              <button
+                onClick={createLesson}
+                disabled={!form.name || !form.teacherId || !form.classId}
+              >
+                Save
+              </button>
               <button onClick={() => setShowModal(false)}>Cancel</button>
             </div>
           </div>

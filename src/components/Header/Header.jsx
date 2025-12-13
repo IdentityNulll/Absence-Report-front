@@ -15,6 +15,7 @@ export default function Header() {
   );
 
   useEffect(() => {
+    localStorage.removeItem("profileUrl");
     if (profileUrl && admin) return;
 
     const fetchAdmin = async () => {
