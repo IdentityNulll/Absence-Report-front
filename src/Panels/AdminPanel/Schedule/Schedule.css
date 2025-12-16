@@ -97,7 +97,11 @@
 
 /* Lesson Card */
 .lesson-box {
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
   color: #fff;
   padding: 1rem;
   border-radius: 14px;
@@ -154,10 +158,196 @@
   }
 }
 
-
-@media (max-width:500px) {
+@media (max-width: 500px) {
   .schedule-page {
     margin: 0;
     padding: 0;
   }
+}
+
+/* ===== MODAL BACKDROP ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeBackdrop 0.25s ease;
+}
+
+/* ===== MODAL CARD ===== */
+.modal {
+  background: var(--card-bg);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  padding: 1.6rem;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid var(--border-color);
+  animation: scaleIn 0.25s ease;
+}
+
+/* Title */
+.modal h3 {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* ===== INPUTS & SELECTS ===== */
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  margin-bottom: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.modal input::placeholder {
+  color: var(--subtext-color);
+}
+
+/* Focus */
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25);
+}
+
+/* ===== ACTION BUTTONS ===== */
+.modal-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 0.7rem 0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition)
+}
+
+/* Save */
+.modal-actions button:first-child {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
+  color: var(--text-color);
+}
+
+.modal-actions button:first-child:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+}
+
+/* Disabled Save */
+.modal-actions button:first-child:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Cancel */
+.modal-actions button:last-child {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.modal-actions button:last-child:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* ===== DARK MODE SELECT FIX ===== */
+.modal select {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Dropdown list */
+.modal select option {
+  background-color: #0f172a; /* dark slate */
+  color: #e5e7eb;
+}
+
+/* Selected option */
+.modal select option:checked {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Hover (works in Chromium browsers) */
+.modal select option:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 500px) {
+  .modal {
+    margin: 0 0.8rem;
+    padding: 1.3rem;
+  }
+}
+/* ===== DARK MODE SELECT FIX ===== */
+.modal select {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Dropdown list */
+.modal select option {
+  background-color: #0f172a; /* dark slate */
+  color: #e5e7eb;
+}
+
+/* Selected option */
+.modal select option:checked {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Hover (works in Chromium browsers) */
+.modal select option:hover {
+  background-color: var(--accent-color);
+  color: #fff;
 }
