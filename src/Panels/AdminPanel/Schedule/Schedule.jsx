@@ -62,11 +62,10 @@ export default function Schedule() {
     fetchTeachers();
     fetchClasses();
 
-    console.log(classes)
-    console.log(teachers)
+    console.log(classes);
+    console.log(teachers);
   }, []);
 
-  // 🔥 FETCH TEACHERS
   const fetchTeachers = async () => {
     try {
       const res = await api.get("/teachers");
@@ -76,11 +75,11 @@ export default function Schedule() {
     }
   };
 
-  // 🔥 FETCH CLASSES
   const fetchClasses = async () => {
     try {
       const res = await api.get("/class/all");
-      setClasses(Array.isArray(res.data.data) ? res.data.data : []);
+      console.log(res)
+      setClasses(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to fetch classes", err);
     }
@@ -96,23 +95,30 @@ export default function Schedule() {
       const normalized = {};
 
       lessons.forEach((l) => {
-        const day = Object.keys(DAY_ENUM).find(
-          (k) => DAY_ENUM[k] === l.dayOfWeek
+        const dayKey = Object.keys(DAY_ENUM).find(
+          (d) => DAY_ENUM[d] === l.dayOfWeek
         );
 
-        const period = Object.keys(PERIOD_ENUM).find(
-          (k) => PERIOD_ENUM[k] === l.period
+        const periodKey = Object.keys(PERIOD_ENUM).find(
+          (p) => PERIOD_ENUM[p] === l.period
         );
 
-        if (!day || !period) return;
+        if (!dayKey || !periodKey) {
+          console.warn("Skipped lesson (bad day/period):", l);
+          return;
+        }
 
-        if (!normalized[day]) normalized[day] = {};
+        if (!normalized[dayKey]) {
+          normalized[dayKey] = {};
+        }
 
-        normalized[day][period] = {
+        normalized[dayKey][periodKey] = {
           id: l.id,
           subject: l.name,
-          teacher: `${l.teacherResponseDto.firstName} ${l.teacherResponseDto.lastName}`,
-          className: l.classResponseDto.name,
+          teacher: l.teacherResponseDto
+            ? `${l.teacherResponseDto.firstName} ${l.teacherResponseDto.lastName}`
+            : "—",
+          className: l.classResponseDto?.name || "—",
         };
       });
 
