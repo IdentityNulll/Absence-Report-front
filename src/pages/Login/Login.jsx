@@ -27,6 +27,7 @@ function Login() {
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -79,6 +80,7 @@ function Login() {
 
           <div className="input-container">
             <label>Email</label>
+            
             <input
               type="email"
               placeholder="Enter your email"
