@@ -9,6 +9,8 @@ import {
   faChevronDown,
   faTimes,
   faTrash,
+  faEye,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import api from "../../../api/axios";
@@ -34,7 +36,7 @@ export default function ManageUsers() {
   // ✅ Modal for showing selected user's details
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   // Fetch list by type
   const fetchList = async (type) => {
     try {
@@ -192,11 +194,12 @@ export default function ManageUsers() {
                 <div className="user-list">
                   <ul>
                     {list.map((item, i) => (
-                      <li key={i} className="user-item">
-                        <div
-                          className="user-info"
-                          onClick={() => handleUserClick(item)}
-                        >
+                      <li
+                        key={i}
+                        className="user-item"
+                        onClick={() => handleUserClick(item)}
+                      >
+                        <div className="user-info">
                           {selectedType === "classes" ? (
                             <>{item.name}</>
                           ) : (
@@ -221,13 +224,15 @@ export default function ManageUsers() {
           </div>
         ))}
 
-        {/* ✅ Modal for adding new user/class */}
         {showModal && (
           <div className="modal-overlay">
             <div className="modal-content">
               <div className="modal-header">
                 <h3>Add New {selectedType?.slice(0, -1)}</h3>
-                <button className="close-btn" onClick={() => setShowModal(false)}>
+                <button
+                  className="close-btn"
+                  onClick={() => setShowModal(false)}
+                >
                   <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>
@@ -358,6 +363,21 @@ export default function ManageUsers() {
                         <b>Role:</b> {selectedUser.role}
                       </p>
                     )}
+                    <div className="password-row">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={selectedUser.password || "************"}
+                        readOnly
+                      />
+                      <button
+                        className="eye-btn"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        <FontAwesomeIcon
+                          icon={showPassword ? faEyeSlash : faEye}
+                        />
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
