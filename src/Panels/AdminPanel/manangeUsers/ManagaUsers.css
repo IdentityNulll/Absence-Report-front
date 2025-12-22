@@ -340,3 +340,26 @@
     opacity: 1;
   }
 }
+
+.password-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.password-row input {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  color: var(--main-color);
+  padding: 0.8rem;
+  background: var(--bg-color);
+}
+
+.eye-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--main-color);
+  font-size: 1.1rem;
+}

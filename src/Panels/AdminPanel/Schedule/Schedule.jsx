@@ -56,14 +56,10 @@ export default function Schedule() {
 
   const selectedDay = days[selectedDayIndex];
 
-  // ================= FETCH DATA =================
   useEffect(() => {
     fetchLessons();
     fetchTeachers();
     fetchClasses();
-
-    console.log(classes);
-    console.log(teachers);
   }, []);
 
   const fetchTeachers = async () => {
@@ -85,7 +81,6 @@ export default function Schedule() {
     }
   };
 
-  // 🔥 FETCH LESSONS
   const fetchLessons = async () => {
     try {
       const res = await api.get("/lessons");
