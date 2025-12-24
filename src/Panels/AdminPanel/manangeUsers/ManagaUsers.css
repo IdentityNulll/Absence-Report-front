@@ -235,7 +235,6 @@
 
 /* ===== New Styles for Updates ===== */
 
-/* Delete Button */
 .delete-btn {
   background: #ff4d4d;
   border: none;
@@ -249,7 +248,7 @@
 
 .delete-btn:hover {
   background: #ff2e2e;
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
 }
 
 /* Place delete button to the right in user list */
