@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./Schedule.css";
 import Header from "../../../components/Header/Header";
 import api from "../../../api/axios";
-import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faArrowLeft,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 
 const days = [
   "Monday",
@@ -169,14 +172,14 @@ export default function Schedule() {
           onClick={() => setSelectedDayIndex((p) => (p === 0 ? 5 : p - 1))}
           className="arrow-btn"
         >
-          <FontAwesomeIcon icon={faArrowLeft}/>
+          <FontAwesomeIcon icon={faArrowLeft} />
         </button>
         <h2>{selectedDay}</h2>
         <button
           onClick={() => setSelectedDayIndex((p) => (p === 5 ? 0 : p + 1))}
           className="arrow-btn"
         >
-          <FontAwesomeIcon icon={faArrowRight}/>
+          <FontAwesomeIcon icon={faArrowRight} />
         </button>
       </div>
 
@@ -190,18 +193,36 @@ export default function Schedule() {
 
           return (
             <div key={p} className="lesson-row">
-              <strong>{p}</strong>
+              {/* LEFT: PERIOD */}
+              <div className="period-info">
+                <strong>{p}</strong>
+              </div>
 
-              {lesson ? (
-                <div className="lesson-box">
-                  <h4>{lesson.subject}</h4>
-                  <p>{lesson.teacher}</p>
-                  <span>{lesson.className}</span>
-                  <button onClick={() => deleteLesson(lesson.id)}>🗑</button>
-                </div>
-              ) : (
-                <span>— No lesson —</span>
-              )}
+              {/* RIGHT: LESSON */}
+              <div className="lesson-content1">
+                {lesson ? (
+                  <div className="lesson-box">
+                    <div className="lesson-content">
+                      <h4 className="class-name">{lesson.subject}</h4>
+                      <p className="class-tag">
+                        🧑‍🏫 The teacher — "{lesson.teacher}"
+                      </p>{" "}
+                      <br />
+                      <span className="class-tag">
+                        📚 The Class — {/*{lesson.className}*/}
+                      </span>
+                    </div>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteLesson(lesson.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                ) : (
+                  <span className="empty-slot">— No lesson —</span>
+                )}
+              </div>
             </div>
           );
         })}

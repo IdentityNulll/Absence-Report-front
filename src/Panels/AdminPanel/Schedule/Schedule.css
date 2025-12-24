@@ -25,8 +25,6 @@
   letter-spacing: 0.5px;
 }
 
-
-
 /* Arrows */
 .arrow-btn {
   background: var(--card-bg);
@@ -70,6 +68,22 @@
   border-bottom: none;
 }
 
+.delete-btn {
+  background: #ff4d4d;
+  border: none;
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.delete-btn:hover {
+  background: #ff2e2e;
+  /* transform: scale(1.05); */
+}
+
 /* ===== PERIOD INFO (LEFT SIDE) ===== */
 .period-info {
   width: 180px;
@@ -90,10 +104,9 @@
 }
 
 /* ===== LESSON CONTENT (RIGHT SIDE) ===== */
-.lesson-content {
-  flex: 1;
+.lesson-box {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -107,14 +120,26 @@
   color: #fff;
   padding: 1rem;
   border-radius: 14px;
-  width: 90%;
+  width: 100%;
   box-shadow: var(--shadow-medium);
   transition: var(--transition);
   animation: fadeInUp 0.3s ease;
 }
 
+.class-tag {
+  text-transform: capitalize;
+}
+
+.lesson-content1 {
+  width: 100%;
+}
+
+.class-name {
+  font-size: 25px !important;
+}
+
 .lesson-box:hover {
-  transform: translateY(-4px) scale(1.03);
+  transform: translateY(-4px) scale(1.01);
   box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
 }
 
@@ -244,7 +269,7 @@
   font-weight: 700;
   cursor: pointer;
   border: none;
-  transition: var(--transition)
+  transition: var(--transition);
 }
 
 /* Save */
