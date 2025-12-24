@@ -32,8 +32,6 @@ export default function ManageUsers() {
     classId: "",
     name: "",
   });
-
-  // ✅ Modal for showing selected user's details
   const [selectedUser, setSelectedUser] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -82,7 +80,6 @@ export default function ManageUsers() {
     }
   };
 
-  // ✅ Add new user/class
   const handleAddUser = async () => {
     try {
       if (selectedType === "classes") {
