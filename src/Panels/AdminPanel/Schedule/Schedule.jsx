@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./Schedule.css";
 import Header from "../../../components/Header/Header";
 import api from "../../../api/axios";
+import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 
 const days = [
   "Monday",
@@ -74,7 +77,6 @@ export default function Schedule() {
   const fetchClasses = async () => {
     try {
       const res = await api.get("/class/all");
-      console.log(res)
       setClasses(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to fetch classes", err);
@@ -86,7 +88,6 @@ export default function Schedule() {
       const res = await api.get("/lessons");
       const lessons = res.data.data;
 
-      console.log(lessons);
       const normalized = {};
 
       lessons.forEach((l) => {
@@ -166,14 +167,16 @@ export default function Schedule() {
       <div className="day-selector">
         <button
           onClick={() => setSelectedDayIndex((p) => (p === 0 ? 5 : p - 1))}
+          className="arrow-btn"
         >
-          ◀
+          <FontAwesomeIcon icon={faArrowLeft}/>
         </button>
         <h2>{selectedDay}</h2>
         <button
           onClick={() => setSelectedDayIndex((p) => (p === 5 ? 0 : p + 1))}
+          className="arrow-btn"
         >
-          ▶
+          <FontAwesomeIcon icon={faArrowRight}/>
         </button>
       </div>
 
