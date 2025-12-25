@@ -90,6 +90,7 @@ export default function Schedule() {
     try {
       const res = await api.get("/lessons");
       const lessons = res.data.data;
+      console.log(lessons)
 
       const normalized = {};
 
@@ -209,7 +210,7 @@ export default function Schedule() {
                       </p>{" "}
                       <br />
                       <span className="class-tag">
-                        📚 The Class — {/*{lesson.className}*/}
+                        📚 The Class — {lesson.className}
                       </span>
                     </div>
                     <button
