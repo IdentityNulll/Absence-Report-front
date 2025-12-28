@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { faBookmark, faClock } from "@fortawesome/free-regular-svg-icons";
 import { faGraduationCap, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +18,9 @@ function Dashboard() {
   const [admin, setAdmin] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [classes, setClasses] = useState([]);
+  const [classId, setClassId] = useState("");
+  const [absentCount, setAbsentCount] = useState(0);
+  const [lateCount, setLateCount] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -26,12 +29,32 @@ function Dashboard() {
 
   const fetchLessons = async () => {
     const res = await api.get("/lessons");
+
     setLessons(res.data?.data || []);
   };
 
   const fetchClasses = async () => {
     const res = await api.get("/class/all");
-    setClasses(Array.isArray(res.data) ? res.data : []);
+    const data = Array.isArray(res.data) ? res.data : [];
+    setClasses(data);
+    setClassId(data[0]?.uuid || null);
+  };
+
+  const fetchAttendanceStats = async (classId, totalStudents) => {
+    const res = await api.get(`/attendance`);
+    const data = Array.isArray(res.data?.data) ? res.data.data : [];
+    console.log(data)
+
+    const absent = data.filter((i) => i.reasonType === "ABSENT").length;
+    const late = data.filter((i) => i.reasonType === "LATE").length;
+
+    setAbsentCount(absent);
+    setLateCount(late);
+
+    if (totalStudents > 0) {
+      const present = totalStudents - absent;
+      setAttendanceRate(((present / totalStudents) * 100).toFixed(1));
+    }
   };
 
   useEffect(() => {
@@ -39,25 +62,19 @@ function Dashboard() {
       try {
         await Promise.all([fetchLessons(), fetchClasses()]);
 
-        const studentRes = await api.get("student");
+        const studentRes = await api.get("/student");
+        const studentsData = Array.isArray(studentRes.data?.data)
+          ? studentRes.data.data
+          : [];
+
+        setStudents(studentsData);
+
         const id = localStorage.getItem("id");
         const adminRes = await api.get(`/admin/${id}`);
-
         setAdmin(adminRes.data?.data);
 
-        if (Array.isArray(studentRes.data?.data)) {
-          const data = studentRes.data.data;
-          setStudents(data);
-
-          const presentCount = data.filter(
-            (s) => s.status === "PRESENT" || s.attendance === "present"
-          ).length;
-
-          setAttendanceRate(
-            data.length > 0
-              ? ((presentCount / data.length) * 100).toFixed(1)
-              : 0
-          );
+        if (classes[0]?.uuid) {
+          await fetchAttendanceStats(classes[0].uuid, studentsData.length);
         }
       } finally {
         setLoading(false);
@@ -65,7 +82,7 @@ function Dashboard() {
     };
 
     fetchData();
-  }, []);
+  }, [classes.length]);
 
   const formatTime = (date) =>
     date.toLocaleTimeString("en-US", {
@@ -127,7 +144,7 @@ function Dashboard() {
           </h3>
           {classes.slice(0, 4).map((cls) => (
             <Link
-              to={`/admin/class/${encodeURIComponent(cls.name)}`}
+              to={`/admin/class/${classId}`}
               key={cls.uuid}
               className="class-card purple"
             >
@@ -152,13 +169,13 @@ function Dashboard() {
             <p>
               <span>●</span> Absent Today
             </p>
-            <strong>2</strong>
+            <strong>{absentCount}</strong>
           </div>
           <div className="quick-card late">
             <p>
               <span>●</span> Late Arrivals
             </p>
-            <strong>2</strong>
+            <strong>{lateCount}</strong>
           </div>
         </div>
       </div>
