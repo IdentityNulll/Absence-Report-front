@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../../components/Header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock, faCamera } from "@fortawesome/free-solid-svg-icons";
@@ -8,13 +8,10 @@ import api from "../../../api/axios";
 import "./Profile.css";
 import Loader from "../../../components/loader/Loader";
 import { Link } from "react-router-dom";
-import ManageUsers from "../manangeUsers/ManageUsers";
 
 export default function Profile() {
   const [adminData, setAdminData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showManageModal, setShowManageModal] = useState(false);
-  const [manageType, setManageType] = useState("");
   const [profileImg, setProfileImg] = useState(null);
   const [preview, setPreview] = useState(null);
 
@@ -25,26 +22,21 @@ export default function Profile() {
         const token = localStorage.getItem("token");
 
         const res = await api.get(`/admin/${id}`);
-        let admin = Array.isArray(res.data.data)
-          ? res.data.data[0]
-          : res.data.data;
+        const admin = res.data?.data;
 
-        if (admin.photoUrl) {
-          // Fetch image with token
+        if (admin?.photoUrl) {
           const imageRes = await api.get(admin.photoUrl, {
             responseType: "blob",
             headers: { Authorization: `Bearer ${token}` },
           });
 
-          // Convert blob to object URL
           admin.photoUrl = URL.createObjectURL(imageRes.data);
         } else {
           admin.photoUrl = null;
         }
 
         setAdminData(admin);
-      } catch (err) {
-        console.log(err);
+      } catch {
         toast.error("Failed to load profile");
       } finally {
         setLoading(false);
@@ -55,139 +47,114 @@ export default function Profile() {
   }, []);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
 
     setProfileImg(file);
-
-    const reader = new FileReader();
-    reader.onload = () => setPreview(reader.result);
-    reader.readAsDataURL(file);
+    setPreview(URL.createObjectURL(file));
   };
+
   const uploadPhoto = async () => {
     try {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("id");
+
       const formData = new FormData();
-      
       formData.append("file", profileImg);
 
-      let res;
-      if (adminData?.photoUrl == null) {
-        // No photo yet → POST
-        res = await api.post(`/user-photo/${userId}`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      } else {
-        // Photo exists → PUT
-        res = await api.put(`/user-photo/${userId}`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      }
+      const method = adminData?.photoUrl ? "put" : "post";
 
-      console.log("Uploaded:", res.data);
+      await api[method](`/user-photo/${userId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      // Update preview & adminData with new image
       const imageRes = await api.get(`/user-photo/${userId}`, {
         responseType: "blob",
         headers: { Authorization: `Bearer ${token}` },
       });
+
       const imageURL = URL.createObjectURL(imageRes.data);
+
       setAdminData((prev) => ({ ...prev, photoUrl: imageURL }));
-      setPreview(null); // reset preview
-      toast.success("Photo updated!");
-    } catch (err) {
-      console.error("Upload error:", err);
+      setProfileImg(null);
+      setPreview(null);
+
+      toast.success("Photo updated");
+    } catch {
       toast.error("Failed to upload photo");
     }
   };
 
+  if (loading) return <Loader />;
+
   return (
-    <div className="profile-wrapper">
+    <main className="profile-wrapper">
       <Header />
-      <div className="profile">
-        <div className="profile-container">
-          {loading ? (
-            <Loader />
-          ) : (
-            <div className="profile-content">
-              {/* PROFILE PHOTO UPLOAD */}
-              <div className="profile-avatar-container">
-                <label htmlFor="profile-upload" className="profile-avatar">
-                  {preview ? (
-                    <img src={preview} alt="preview" className="avatar-img" />
-                  ) : adminData?.photoUrl ? (
-                    <img
-                      src={adminData.photoUrl}
-                      alt="profile"
-                      className="avatar-img"
-                    />
-                  ) : (
-                    <FontAwesomeIcon icon={faUser} className="default" />
-                  )}
 
-                  <div className="camera-icon">
-                    <FontAwesomeIcon icon={faCamera} />
-                  </div>
-                </label>
-
-                <input
-                  id="profile-upload"
-                  type="file"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={handleImageChange}
-                />
-              </div>
-
-              {profileImg && (
-                <button onClick={uploadPhoto} className="btn-primary mt-2">
-                  Upload Photo
-                </button>
+      <section className="profile">
+        <div className="profile-content">
+          <div className="profile-avatar-container">
+            <label
+              htmlFor="profile-upload"
+              className="profile-avatar"
+              aria-label="Change profile photo"
+            >
+              {preview ? (
+                <img src={preview} alt="Profile preview" />
+              ) : adminData?.photoUrl ? (
+                <img src={adminData.photoUrl} alt="Profile" />
+              ) : (
+                <FontAwesomeIcon icon={faUser} aria-hidden="true" />
               )}
 
-              {/* USER INFO */}
-              <h2>
-                {adminData?.firstName} {adminData?.lastName}
-              </h2>
+              <span className="camera-icon" aria-hidden="true">
+                <FontAwesomeIcon icon={faCamera} />
+              </span>
+            </label>
 
-              <div className="profile-info-box">
-                <span className="label">Birthday:</span>
-                <span>{adminData?.birthday}</span>
-              </div>
+            <input
+              id="profile-upload"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleImageChange}
+            />
+          </div>
 
-              <div className="profile-info-box">
-                <span className="label">Email:</span>
-                <span>{adminData?.mail}</span>
-              </div>
-
-              <div className="profile-info-box">
-                <span className="label">Role:</span>
-                <span>{adminData?.role}</span>
-              </div>
-
-              <Link to={"/admin/changepassword"} className="btn-primary">
-                <FontAwesomeIcon icon={faLock} /> Change Password
-              </Link>
-            </div>
+          {profileImg && (
+            <button className="btn-primary" onClick={uploadPhoto}>
+              Upload Photo
+            </button>
           )}
-        </div>
-      </div>
 
-      {showManageModal && (
-        <ManageUsers
-          manageType={manageType}
-          closeModal={() => setShowManageModal(false)}
-        />
-      )}
+          <h1>
+            {adminData?.firstName} {adminData?.lastName}
+          </h1>
+
+          <div className="profile-info-box">
+            <span className="label">Birthday</span>
+            <span>{adminData?.birthday}</span>
+          </div>
+
+          <div className="profile-info-box">
+            <span className="label">Email</span>
+            <span>{adminData?.mail}</span>
+          </div>
+
+          <div className="profile-info-box">
+            <span className="label">Role</span>
+            <span>{adminData?.role}</span>
+          </div>
+
+          <Link to="/admin/changepassword" className="btn-primary">
+            <FontAwesomeIcon icon={faLock} aria-hidden="true" /> Change Password
+          </Link>
+        </div>
+      </section>
 
       <ToastContainer />
-    </div>
+    </main>
   );
 }

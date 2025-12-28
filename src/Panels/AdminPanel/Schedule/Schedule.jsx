@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Schedule.css";
 import Header from "../../../components/Header/Header";
 import api from "../../../api/axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowRight,
   faArrowLeft,
+  faArrowRight,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const days = [
+const DAYS = [
   "Monday",
   "Tuesday",
   "Wednesday",
@@ -18,7 +18,7 @@ const days = [
   "Saturday",
 ];
 
-const periods = [
+const PERIODS = [
   "Period 1",
   "Period 2",
   "Period 3",
@@ -49,188 +49,163 @@ export default function Schedule() {
   const [schedule, setSchedule] = useState({});
   const [teachers, setTeachers] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+  const [dayIndex, setDayIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
-    day: "Monday",
-    period: "Period 1",
+    day: DAYS[0],
+    period: PERIODS[0],
     teacherId: "",
     classId: "",
   });
 
-  const selectedDay = days[selectedDayIndex];
+  const selectedDay = DAYS[dayIndex];
 
   useEffect(() => {
-    fetchLessons();
-    fetchTeachers();
-    fetchClasses();
+    loadAll();
   }, []);
 
+  const loadAll = async () => {
+    await Promise.all([fetchLessons(), fetchTeachers(), fetchClasses()]);
+  };
+
   const fetchTeachers = async () => {
-    try {
-      const res = await api.get("/teachers");
-      setTeachers(Array.isArray(res.data.data) ? res.data.data : []);
-    } catch (err) {
-      console.error("Failed to fetch teachers", err);
-    }
+    const res = await api.get("/teachers");
+    setTeachers(res.data?.data || []);
   };
 
   const fetchClasses = async () => {
-    try {
-      const res = await api.get("/class/all");
-      setClasses(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
-      console.error("Failed to fetch classes", err);
-    }
+    const res = await api.get("/class/all");
+    setClasses(res.data || []);
   };
 
   const fetchLessons = async () => {
-    try {
-      const res = await api.get("/lessons");
-      const lessons = res.data.data;
+    const res = await api.get("/lessons");
+    const lessons = res.data?.data || [];
+    const normalized = {};
 
-      const normalized = {};
+    lessons.forEach((l) => {
+      const day = Object.keys(DAY_ENUM).find(
+        (d) => DAY_ENUM[d] === l.dayOfWeek
+      );
+      const period = Object.keys(PERIOD_ENUM).find(
+        (p) => PERIOD_ENUM[p] === l.period
+      );
+      if (!day || !period) return;
 
-      lessons.forEach((l) => {
-        const dayKey = Object.keys(DAY_ENUM).find(
-          (d) => DAY_ENUM[d] === l.dayOfWeek
-        );
+      normalized[day] ??= {};
+      normalized[day][period] = {
+        id: l.id,
+        subject: l.name,
+        teacher: l.teacherResponseDto
+          ? `${l.teacherResponseDto.firstName} ${l.teacherResponseDto.lastName}`
+          : "—",
+        className: l.classResponseDto?.name || "—",
+      };
+    });
 
-        const periodKey = Object.keys(PERIOD_ENUM).find(
-          (p) => PERIOD_ENUM[p] === l.period
-        );
-
-        if (!dayKey || !periodKey) {
-          console.warn("Skipped lesson (bad day/period):", l);
-          return;
-        }
-
-        if (!normalized[dayKey]) {
-          normalized[dayKey] = {};
-        }
-
-        normalized[dayKey][periodKey] = {
-          id: l.id,
-          subject: l.name,
-          teacher: l.teacherResponseDto
-            ? `${l.teacherResponseDto.firstName} ${l.teacherResponseDto.lastName}`
-            : "—",
-          className: l.classResponseDto?.name || "—",
-        };
-      });
-
-      setSchedule(normalized);
-    } catch (err) {
-      console.error("Failed to fetch lessons", err);
-    }
+    setSchedule(normalized);
   };
-  
+
   const createLesson = async () => {
-    try {
-      await api.post("/lessons", {
-        name: form.name,
-        teacherId: form.teacherId,
-        classId: form.classId,
-        dayOfWeek: DAY_ENUM[form.day],
-        period: PERIOD_ENUM[form.period],
-      });
+    await api.post("/lessons", {
+      name: form.name,
+      teacherId: form.teacherId,
+      classId: form.classId,
+      dayOfWeek: DAY_ENUM[form.day],
+      period: PERIOD_ENUM[form.period],
+    });
 
-      setShowModal(false);
-      setForm({
-        name: "",
-        day: "Monday",
-        period: "Period 1",
-        teacherId: "",
-        classId: "",
-      });
+    setShowModal(false);
+    setForm({
+      name: "",
+      day: DAYS[0],
+      period: PERIODS[0],
+      teacherId: "",
+      classId: "",
+    });
 
-      fetchLessons();
-    } catch (err) {
-      console.error("Create lesson failed", err);
-    }
+    fetchLessons();
   };
 
   const deleteLesson = async (id) => {
-    try {
-      await api.delete(`/lessons/${id}`);
-      fetchLessons();
-    } catch (err) {
-      console.error("Delete failed", err);
-    }
+    await api.delete(`/lessons/${id}`);
+    fetchLessons();
   };
 
-  // ================= UI =================
   return (
-    <div className="schedule-page">
+    <main className="schedule-page">
       <Header />
 
-      <div className="day-selector">
+      <section className="day-selector">
         <button
-          onClick={() => setSelectedDayIndex((p) => (p === 0 ? 5 : p - 1))}
           className="arrow-btn"
+          aria-label="Previous day"
+          onClick={() => setDayIndex((p) => (p === 0 ? DAYS.length - 1 : p - 1))}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
-        <h2>{selectedDay}</h2>
+
+        <h1 className="selected-day-title">{selectedDay}</h1>
+
         <button
-          onClick={() => setSelectedDayIndex((p) => (p === 5 ? 0 : p + 1))}
           className="arrow-btn"
+          aria-label="Next day"
+          onClick={() => setDayIndex((p) => (p === DAYS.length - 1 ? 0 : p + 1))}
         >
           <FontAwesomeIcon icon={faArrowRight} />
         </button>
-      </div>
+      </section>
 
       <button className="create-btn" onClick={() => setShowModal(true)}>
         + Create Lesson
       </button>
 
-      <div className="schedule-grid">
-        {periods.map((p) => {
-          const lesson = schedule[selectedDay]?.[p];
+      <section className="schedule-grid">
+        {PERIODS.map((period) => {
+          const lesson = schedule[selectedDay]?.[period];
 
           return (
-            <div key={p} className="lesson-row">
-              {/* LEFT: PERIOD */}
+            <div key={period} className="lesson-row">
               <div className="period-info">
-                <strong>{p}</strong>
+                <strong>{period}</strong>
               </div>
 
-              {/* RIGHT: LESSON */}
               <div className="lesson-content1">
                 {lesson ? (
                   <div className="lesson-box">
-                    <div className="lesson-content">
-                      <h4 className="class-name">{lesson.subject}</h4>
+                    <div className="lesson-box-content">
+                      <h2 className="class-name">{lesson.subject}</h2>
                       <p className="class-tag">
-                        🧑‍🏫 The teacher — "{lesson.teacher}"
-                      </p>{" "}
-                      <br />
-                      <span className="class-tag">
-                        📚 The Class — {lesson.className}
+                        Teacher — {lesson.teacher}
+                      </p>
+                      <span className="class-tag1">
+                        Class — {lesson.className}
                       </span>
                     </div>
+
                     <button
                       className="delete-btn"
+                      aria-label="Delete lesson"
                       onClick={() => deleteLesson(lesson.id)}
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
                 ) : (
-                  <span className="empty-slot">— No lesson —</span>
+                  <span className="empty-slot">No lesson</span>
                 )}
               </div>
             </div>
           );
         })}
-      </div>
+      </section>
 
       {showModal && (
-        <div className="modal-backdrop">
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
           <div className="modal">
-            <h3>Create Lesson</h3>
+            <h2>Create Lesson</h2>
 
             <input
               placeholder="Lesson name"
@@ -242,10 +217,8 @@ export default function Schedule() {
               value={form.day}
               onChange={(e) => setForm({ ...form, day: e.target.value })}
             >
-              {days.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
+              {DAYS.map((d) => (
+                <option key={d}>{d}</option>
               ))}
             </select>
 
@@ -253,19 +226,18 @@ export default function Schedule() {
               value={form.period}
               onChange={(e) => setForm({ ...form, period: e.target.value })}
             >
-              {periods.map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
+              {PERIODS.map((p) => (
+                <option key={p}>{p}</option>
               ))}
             </select>
 
-            {/* 🔥 TEACHER */}
             <select
               value={form.teacherId}
-              onChange={(e) => setForm({ ...form, teacherId: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, teacherId: e.target.value })
+              }
             >
-              <option value="">Select Teacher</option>
+              <option value="">Select teacher</option>
               {teachers.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.firstName} {t.lastName}
@@ -273,12 +245,11 @@ export default function Schedule() {
               ))}
             </select>
 
-            {/* 🔥 CLASS */}
             <select
               value={form.classId}
               onChange={(e) => setForm({ ...form, classId: e.target.value })}
             >
-              <option value="">Select Class</option>
+              <option value="">Select class</option>
               {classes.map((c) => (
                 <option key={c.uuid} value={c.uuid}>
                   {c.name}
@@ -298,6 +269,6 @@ export default function Schedule() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

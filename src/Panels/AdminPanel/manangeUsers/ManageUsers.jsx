@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGraduationCap,
@@ -9,177 +9,153 @@ import {
   faChevronDown,
   faTimes,
   faTrash,
-  faEye,
-  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import api from "../../../api/axios";
 import Header from "../../../components/Header/Header";
 import "./ManagaUsers.css";
 
+const USER_TYPES = [
+  { type: "students", label: "Students", icon: faUsers },
+  { type: "teachers", label: "Teachers", icon: faGraduationCap },
+  { type: "admins", label: "Admins", icon: faUserShield },
+  { type: "classes", label: "Classes", icon: faSchool },
+];
+
+const EMPTY_USER = {
+  firstName: "",
+  lastName: "",
+  mail: "",
+  birthday: "",
+  role: "STUDENT",
+  password: "",
+  classId: "",
+  name: "",
+};
+
 export default function ManageUsers() {
   const [selectedType, setSelectedType] = useState(null);
   const [list, setList] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [classList, setClassList] = useState([]);
-  const [newUser, setNewUser] = useState({
-    firstName: "",
-    lastName: "",
-    mail: "",
-    birthday: "",
-    role: "STUDENT",
-    password: "",
-    classId: "",
-    name: "",
-  });
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showUserModal, setShowUserModal] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  // Fetch list by type
-  const fetchList = async (type) => {
-    try {
-      let res;
-      if (type === "teachers") {
-        res = await api.get("teachers");
-        setList(res.data.data || res.data);
-      } else if (type === "students") {
-        res = await api.get("student");
-        setList(res.data.data || res.data);
-      } else if (type === "admins") {
-        res = await api.get("admin");
-        setList(res.data.data || res.data);
-      } else if (type === "classes") {
-        res = await api.get("class/all");
-        setList(res.data.data || res.data);
-      }
-    } catch {
-      toast.error("Failed to fetch users");
-    }
-  };
-
-  const fetchClasses = async () => {
-    try {
-      const res = await api.get("class/all");
-      setClassList(res.data.data || res.data);
-    } catch {
-      toast.error("Failed to fetch classes");
-    }
-  };
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [newUser, setNewUser] = useState(EMPTY_USER);
 
   useEffect(() => {
     fetchClasses();
   }, []);
 
+  const fetchClasses = async () => {
+    const res = await api.get("/class/all");
+    setClassList(res.data?.data || res.data || []);
+  };
+
+  const fetchList = async (type) => {
+    const endpoints = {
+      teachers: "/teachers",
+      students: "/student",
+      admins: "/admin",
+      classes: "/class/all",
+    };
+
+    try {
+      const res = await api.get(endpoints[type]);
+      setList(res.data?.data || res.data || []);
+    } catch {
+      toast.error("Failed to load data");
+    }
+  };
+
   const handleSelect = (type) => {
     if (selectedType === type) {
       setSelectedType(null);
       setList([]);
-    } else {
-      setSelectedType(type);
-      fetchList(type);
+      return;
     }
+    setSelectedType(type);
+    fetchList(type);
   };
 
-  const handleAddUser = async () => {
+  const handleAdd = async () => {
     try {
       if (selectedType === "classes") {
         if (!newUser.name) return toast.error("Class name required");
-        await api.post("class/add", { name: newUser.name });
-        toast.success("Class added!");
-        setNewUser({
-          firstName: "",
-          lastName: "",
-          mail: "",
-          birthday: "",
-          role: "STUDENT",
-          password: "",
-          classId: "",
-          name: "",
-        });
-        fetchList("classes");
-        setShowModal(false);
-        return;
+        await api.post("/class/add", { name: newUser.name });
+      } else {
+        if (!newUser.firstName || !newUser.lastName || !newUser.mail)
+          return toast.error("All fields required");
+
+        if (selectedType === "students" && !newUser.classId)
+          return toast.error("Select class");
+
+        const endpoints = {
+          teachers: "/teachers",
+          students: "/student",
+          admins: "/admin",
+        };
+
+        await api.post(endpoints[selectedType], newUser);
       }
 
-      if (!newUser.firstName || !newUser.lastName || !newUser.mail)
-        return toast.error("All fields required");
-
-      if (selectedType === "teachers") await api.post("teachers", newUser);
-      if (selectedType === "students") {
-        if (!newUser.classId) return toast.error("Select class");
-        await api.post("student", newUser);
-      }
-      if (selectedType === "admins") await api.post("admin", newUser);
-
-      toast.success("User added!");
+      toast.success("Created successfully");
       setShowModal(false);
+      setNewUser(EMPTY_USER);
       fetchList(selectedType);
     } catch {
-      toast.error("Failed to add user");
+      toast.error("Creation failed");
     }
   };
 
-  // ✅ Delete user/class
   const handleDelete = async (id) => {
-    if (!selectedType) return;
-    let endpoint = "";
+    if (!window.confirm("Delete this item?")) return;
 
-    if (selectedType === "teachers") endpoint = `/teachers/${id}`;
-    if (selectedType === "students") endpoint = `/student/${id}`;
-    if (selectedType === "admins") endpoint = `/admin/${id}`;
-    if (selectedType === "classes") endpoint = `/class/${id}`;
-
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    const endpoints = {
+      teachers: `/teachers/${id}`,
+      students: `/student/${id}`,
+      admins: `/admin/${id}`,
+      classes: `/class/${id}`,
+    };
 
     try {
-      await api.delete(endpoint);
-      toast.success("Deleted successfully!");
+      await api.delete(endpoints[selectedType]);
       fetchList(selectedType);
+      toast.success("Deleted");
     } catch {
-      toast.error("Failed to delete");
+      toast.error("Delete failed");
     }
   };
 
-  // ✅ Show user details modal
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
-    setShowUserModal(true);
-  };
-
-  const userTypes = [
-    { type: "students", label: "Students", icon: faUsers },
-    { type: "teachers", label: "Teachers", icon: faGraduationCap },
-    { type: "admins", label: "Admins", icon: faUserShield },
-    { type: "classes", label: "Classes", icon: faSchool },
-  ];
-
   return (
-    <div className="manage-users-wrapper">
+    <main className="manage-users-wrapper">
       <Header />
-      <div className="manage-users-container fade-in-up">
-        <h2>Manage Users</h2>
 
-        {userTypes.map(({ type, label, icon }) => (
+      <section className="manage-users-container">
+        <h1>Manage Users</h1>
+
+        {USER_TYPES.map(({ type, label, icon }) => (
           <div key={type} className="user-section">
             <button
               className={`user-type-btn ${
                 selectedType === type ? "active" : ""
               }`}
               onClick={() => handleSelect(type)}
+              aria-expanded={selectedType === type}
             >
               <span>
                 <FontAwesomeIcon icon={icon} /> {label}
               </span>
               <FontAwesomeIcon
                 icon={faChevronDown}
-                className={`arrow ${selectedType === type ? "rotated" : ""}`}
+                className={`arrow ${
+                  selectedType === type ? "rotated" : ""
+                }`}
               />
             </button>
 
             {selectedType === type && (
               <div className="user-list-section">
                 <div className="user-list-header">
-                  <h3>{label} List</h3>
+                  <h2>{label}</h2>
                   <button
                     className="btn-primary"
                     onClick={() => setShowModal(true)}
@@ -188,200 +164,127 @@ export default function ManageUsers() {
                   </button>
                 </div>
 
-                <div className="user-list">
-                  <ul>
-                    {list.map((item, i) => (
-                      <li
-                        key={i}
-                        className="user-item"
-                        onClick={() => handleUserClick(item)}
+                <ul className="user-list">
+                  {list.map((item) => (
+                    <li
+                      key={item.id || item.uuid}
+                      className="user-item"
+                      onClick={() => setSelectedItem(item)}
+                    >
+                      <span className="user-info">
+                        {type === "classes"
+                          ? item.name
+                          : `${item.firstName} ${item.lastName} — ${
+                              item.mail || item.email
+                            }`}
+                      </span>
+
+                      <button
+                        className="delete-btn"
+                        aria-label="Delete"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(item.id || item.uuid);
+                        }}
                       >
-                        <div className="user-info">
-                          {selectedType === "classes" ? (
-                            <>{item.name}</>
-                          ) : (
-                            <>
-                              {item.firstName} {item.lastName} —{" "}
-                              {item.mail || item.email}
-                            </>
-                          )}
-                        </div>
-                        <button
-                          className="delete-btn"
-                          onClick={() => handleDelete(item.id || item.uuid)}
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
         ))}
+      </section>
 
-        {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h3>Add New {selectedType?.slice(0, -1)}</h3>
-                <button
-                  className="close-btn"
-                  onClick={() => setShowModal(false)}
-                >
-                  <FontAwesomeIcon icon={faTimes} />
-                </button>
-              </div>
+      {showModal && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <div className="modal-content">
+            <header className="modal-header">
+              <h2>Create {selectedType?.slice(0, -1)}</h2>
+              <button
+                className="close-btn"
+                onClick={() => setShowModal(false)}
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </header>
 
-              <div className="add-user-form">
-                {selectedType === "classes" ? (
-                  <>
-                    <input
-                      placeholder="Class Name"
-                      value={newUser.name}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, name: e.target.value })
-                      }
-                    />
-                  </>
-                ) : (
-                  <>
-                    <input
-                      placeholder="First Name"
-                      value={newUser.firstName}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, firstName: e.target.value })
-                      }
-                    />
-                    <input
-                      placeholder="Last Name"
-                      value={newUser.lastName}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, lastName: e.target.value })
-                      }
-                    />
-                    <input
-                      placeholder="Email"
-                      value={newUser.mail}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, mail: e.target.value })
-                      }
-                    />
-                    <input
-                      type="date"
-                      value={newUser.birthday}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, birthday: e.target.value })
-                      }
-                    />
+            <div className="add-user-form">
+              {selectedType === "classes" ? (
+                <input
+                  placeholder="Class name"
+                  value={newUser.name}
+                  onChange={(e) =>
+                    setNewUser({ ...newUser, name: e.target.value })
+                  }
+                />
+              ) : (
+                <>
+                  <input
+                    placeholder="First name"
+                    value={newUser.firstName}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, firstName: e.target.value })
+                    }
+                  />
+                  <input
+                    placeholder="Last name"
+                    value={newUser.lastName}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, lastName: e.target.value })
+                    }
+                  />
+                  <input
+                    placeholder="Email"
+                    value={newUser.mail}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, mail: e.target.value })
+                    }
+                  />
+                  <input
+                    type="date"
+                    value={newUser.birthday}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, birthday: e.target.value })
+                    }
+                  />
+
+                  {selectedType === "students" && (
                     <select
-                      value={newUser.role}
+                      value={newUser.classId}
                       onChange={(e) =>
-                        setNewUser({ ...newUser, role: e.target.value })
+                        setNewUser({ ...newUser, classId: e.target.value })
                       }
                     >
-                      <option value="STUDENT">Student</option>
-                      <option value="TEACHER">Teacher</option>
-                      <option value="ADMIN">Admin</option>
+                      <option value="">Select class</option>
+                      {classList.map((c) => (
+                        <option key={c.uuid} value={c.uuid}>
+                          {c.name}
+                        </option>
+                      ))}
                     </select>
+                  )}
 
-                    {newUser.role === "STUDENT" && (
-                      <select
-                        value={newUser.classId}
-                        onChange={(e) =>
-                          setNewUser({ ...newUser, classId: e.target.value })
-                        }
-                      >
-                        <option value="">Select Class</option>
-                        {classList.map((cls) => (
-                          <option key={cls.uuid} value={cls.uuid}>
-                            {cls.name}
-                          </option>
-                        ))}
-                      </select>
-                    )}
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={newUser.password}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, password: e.target.value })
+                    }
+                  />
+                </>
+              )}
 
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      value={newUser.password}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, password: e.target.value })
-                      }
-                    />
-                  </>
-                )}
-                <button onClick={handleAddUser} className="btn-primary">
-                  <FontAwesomeIcon icon={faPlus} /> Add
-                </button>
-              </div>
+              <button className="btn-primary" onClick={handleAdd}>
+                <FontAwesomeIcon icon={faPlus} /> Add
+              </button>
             </div>
           </div>
-        )}
-
-        {/* ✅ Modal for showing user details */}
-        {showUserModal && selectedUser && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h3>User Details</h3>
-                <button
-                  className="close-btn"
-                  onClick={() => setShowUserModal(false)}
-                >
-                  <FontAwesomeIcon icon={faTimes} />
-                </button>
-              </div>
-
-              <div className="user-details">
-                {selectedType === "classes" ? (
-                  <p>
-                    <b>Class Name:</b> {selectedUser.name}
-                  </p>
-                ) : (
-                  <>
-                    <p>
-                      <b>First Name:</b> {selectedUser.firstName}
-                    </p>
-                    <p>
-                      <b>Last Name:</b> {selectedUser.lastName}
-                    </p>
-                    <p>
-                      <b>Email:</b> {selectedUser.mail || selectedUser.email}
-                    </p>
-                    {selectedUser.birthday && (
-                      <p>
-                        <b>Birthday:</b> {selectedUser.birthday}
-                      </p>
-                    )}
-                    {selectedUser.role && (
-                      <p>
-                        <b>Role:</b> {selectedUser.role}
-                      </p>
-                    )}
-                    <div className="password-row">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        value={selectedUser.password || "************"}
-                        readOnly
-                      />
-                      <button
-                        className="eye-btn"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        <FontAwesomeIcon
-                          icon={showPassword ? faEyeSlash : faEye}
-                        />
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </main>
   );
 }
