@@ -16,6 +16,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.0.1",
     "@fortawesome/react-fontawesome": "^3.0.2",
     "@react-oauth/google": "^0.12.2",
+    "@tanstack/react-query": "^5.90.14",
     "aos": "^2.3.4",
     "axios": "^1.12.2",
     "i18next": "^25.5.2",
