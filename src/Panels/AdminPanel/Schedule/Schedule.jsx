@@ -90,7 +90,6 @@ export default function Schedule() {
     try {
       const res = await api.get("/lessons");
       const lessons = res.data.data;
-      console.log(lessons)
 
       const normalized = {};
 
@@ -127,8 +126,7 @@ export default function Schedule() {
       console.error("Failed to fetch lessons", err);
     }
   };
-
-  // ================= ACTIONS =================
+  
   const createLesson = async () => {
     try {
       await api.post("/lessons", {
@@ -229,7 +227,6 @@ export default function Schedule() {
         })}
       </div>
 
-      {/* ================= MODAL ================= */}
       {showModal && (
         <div className="modal-backdrop">
           <div className="modal">

@@ -12,87 +12,53 @@ import { Link } from "react-router-dom";
 function Dashboard() {
   const { t } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [classes, setClasses] = useState([]);
   const [students, setStudents] = useState([]);
   const [attendanceRate, setAttendanceRate] = useState(0);
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState(null);
+  const [lessons, setLessons] = useState([]);
+  const [classes, setClasses] = useState([]);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  const fetchLessons = async () => {
+    const res = await api.get("/lessons");
+    setLessons(res.data?.data || []);
+  };
+
+  const fetchClasses = async () => {
+    const res = await api.get("/class/all");
+    setClasses(Array.isArray(res.data) ? res.data : []);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [classRes, studentRes] = await Promise.allSettled([
-          api.get("/class/all"),
-          api.get("student"),
-        ]);
+        await Promise.all([fetchLessons(), fetchClasses()]);
 
+        const studentRes = await api.get("student");
         const id = localStorage.getItem("id");
+        const adminRes = await api.get(`/admin/${id}`);
 
-        try {
-          const adminRes = await api.get(`/admin/${id}`);
-          setAdmin(adminRes.data?.data);
-        } catch (err) {
-          console.error("Failed to fetch admin:", err);
-        }
+        setAdmin(adminRes.data?.data);
 
-        // ✅ Classes
-        if (
-          classRes.status === "fulfilled" &&
-          Array.isArray(classRes.value?.data)
-        ) {
-          const data = classRes.value.data;
-          if (data.length === 0) {
-            console.warn("⚠️ No class data returned from API.");
-          }
-          setClasses(
-            data.map((cls) => ({
-              uuid: cls.uuid || Math.random().toString(),
-              name: cls.name || "Unknown",
-            }))
-          );
-        } else {
-          console.error("❌ Failed to fetch classes:", classRes.reason);
-        }
-
-        // ✅ Students
-        if (
-          studentRes.status === "fulfilled" &&
-          Array.isArray(studentRes.value?.data?.data)
-        ) {
-          const data = studentRes.value.data.data;
-          if (data.length === 0) {
-            console.warn("⚠️ No student data returned from API.");
-          }
+        if (Array.isArray(studentRes.data?.data)) {
+          const data = studentRes.data.data;
           setStudents(data);
-        } else {
-          console.error("❌ Failed to fetch students:", studentRes.reason);
-        }
 
-        // ✅ Attendance Rate
-        const total =
-          studentRes.status === "fulfilled" &&
-          studentRes.value?.data?.data?.length
-            ? studentRes.value.data.data.length
-            : 0;
-        const presentCount =
-          total > 0
-            ? studentRes.value.data.data.filter(
-                (s) => s.status === "PRESENT" || s.attendance === "present"
-              ).length
-            : 0;
-        setAttendanceRate(
-          total > 0 ? ((presentCount / total) * 100).toFixed(1) : 0
-        );
-      } catch (error) {
-        console.error(
-          "🚨 Unexpected error while fetching dashboard data:",
-          error
-        );
+          const presentCount = data.filter(
+            (s) => s.status === "PRESENT" || s.attendance === "present"
+          ).length;
+
+          setAttendanceRate(
+            data.length > 0
+              ? ((presentCount / data.length) * 100).toFixed(1)
+              : 0
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -115,7 +81,6 @@ function Dashboard() {
     <div className="body">
       <Header />
 
-      {/* Welcome Card */}
       <div className="welcome-card fade-in-right">
         <div className="welcome-left">
           <div className="welcome-icon">
@@ -132,24 +97,23 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Stats Section */}
       <div className="stats fade-in-left">
-        <Link to={"/admin/manageusers"} className="stats-box item1">
+        <Link to="/admin/manageusers" className="stats-box item1">
           <FontAwesomeIcon icon={faBookmark} />
           <p className="number">{classes.length}</p>
           <p className="text">{t("dashboard.stats-classes")}</p>
         </Link>
-        <Link to={"/admin/manageusers"} className="stats-box item2">
+        <Link to="/admin/manageusers" className="stats-box item2">
           <FontAwesomeIcon icon={faUsers} />
           <p className="number">{students.length}</p>
           <p className="text">{t("dashboard.stats-students")}</p>
         </Link>
-        <Link to={"/admin/schedule"} className="stats-box item3">
+        <Link to="/admin/schedule" className="stats-box item3">
           <FontAwesomeIcon icon={faClock} />
-          <p className="number">3</p>
-          <p className="text">{t("dashboard.stats-hours")}</p>
+          <p className="number">{lessons.length}</p>
+          <p className="text">Total Lessons</p>
         </Link>
-        <Link to={"/admin/analytics"} className="stats-box item4">
+        <Link to="/admin/analytics" className="stats-box item4">
           <FontAwesomeIcon icon={faGraduationCap} />
           <p className="number">{attendanceRate}%</p>
           <p className="text">{t("dashboard.stats-rate")}</p>
@@ -173,10 +137,11 @@ function Dashboard() {
                 </div>
                 <div>
                   <h4>{cls.name}</h4>
-                  <p>Teacher: Unknown</p>
                 </div>
               </div>
-              <span className="students">0 students</span>
+              <span className="students">
+                {cls.students?.length || 0} students
+              </span>
             </Link>
           ))}
         </div>
@@ -187,27 +152,13 @@ function Dashboard() {
             <p>
               <span>●</span> Absent Today
             </p>
-            <strong>
-              {/* {
-                students.filter(
-                  (s) => s.status === "ABSENT" || s.attendance === "absent"
-                ).length
-              } */}
-              2
-            </strong>
+            <strong>2</strong>
           </div>
           <div className="quick-card late">
             <p>
               <span>●</span> Late Arrivals
             </p>
-            <strong>
-              {/* {
-                students.filter(
-                  (s) => s.status === "LATE" || s.attendance === "late"
-                ).length
-              } */}
-              2
-            </strong>
+            <strong>2</strong>
           </div>
         </div>
       </div>
