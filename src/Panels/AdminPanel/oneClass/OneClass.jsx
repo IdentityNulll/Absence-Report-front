@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../../../components/Header/Header";
 import { useParams } from "react-router-dom";
 import Loader from "../../../components/loader/Loader";
+import api from "../../../api/axios";
 import "./OneClass.css";
 
 function OneClass() {
@@ -11,38 +12,17 @@ function OneClass() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching from API
-    setTimeout(() => {
-      const dummyStudents = [
-        {
-          id: 1,
-          name: "Amina Khan",
-          status: "ABSENT",
-          comment: "Cannot go becuase of a trip",
-        },
-        {
-          id: 2,
-          name: "Kenji Ito",
-          status: "LATE",
-          comment: "Was 10 minutes late due to traffic.",
-        },
-        {
-          id: 3,
-          name: "Sarah Lee",
-          status: "ABSENT",
-          comment: "Reported sick leave today.",
-        },
-        {
-          id: 4,
-          name: "John Doe",
-          status: "LATE",
-          comment: "Will arrive 30min late, because of family issues",
-        },
-      ];
-      setStudents(dummyStudents);
-      setLoading(false);
-    }, 800); // simulate loading
-  }, [className]);
+    const fetchAttendance = async () => {
+      try {
+        const res = await api.get(`/api/attendance/by-classId/${decodedClass}`);
+        setStudents(Array.isArray(res.data?.data) ? res.data.data : []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAttendance();
+  }, [decodedClass]);
 
   if (loading) return <Loader />;
 
@@ -53,7 +33,7 @@ function OneClass() {
         <h2>Attendance Report for {decodedClass}</h2>
 
         {students.length === 0 ? (
-          <p>No students found for this class.</p>
+          <p>No reported absences or delays.</p>
         ) : (
           <table className="students-table">
             <thead>
@@ -61,28 +41,33 @@ function OneClass() {
                 <th>#</th>
                 <th>Name</th>
                 <th>Status</th>
+                <th>Reason</th>
                 <th>Comment</th>
               </tr>
             </thead>
             <tbody>
-              {students.map((s, i) => (
-                <tr key={s.id}>
+              {students.map((item, i) => (
+                <tr key={item.studentResponseDto.id}>
                   <td>{i + 1}</td>
-                  <td>{s.name}</td>
+                  <td>
+                    {item.studentResponseDto.firstName}{" "}
+                    {item.studentResponseDto.lastName}
+                  </td>
                   <td
                     style={{
                       color:
-                        s.status === "PRESENT"
-                          ? "green"
-                          : s.status === "ABSENT"
+                        item.reasonType === "ABSENT"
                           ? "red"
-                          : "orange",
+                          : item.reasonType === "LATE"
+                          ? "orange"
+                          : "green",
                       fontWeight: "bold",
                     }}
                   >
-                    {s.status}
+                    {item.reasonType}
                   </td>
-                  <td>{s.comment}</td>
+                  <td>{item.reason}</td>
+                  <td>{item.comment}</td>
                 </tr>
               ))}
             </tbody>
