@@ -14,7 +14,7 @@ function OneClass() {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const res = await api.get(`/api/attendance/by-classId/${decodedClass}`);
+        const res = await api.get(`/attendance/by-classId/${decodedClass}`);
         setStudents(Array.isArray(res.data?.data) ? res.data.data : []);
       } finally {
         setLoading(false);
